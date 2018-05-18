@@ -1,8 +1,8 @@
 # Expectation propagation: a probabilistic view of Deep Feed Forward Networks
-Code and data used for the numerical experiemnts reported in arXiv:
+Code and data used for the numerical experiments reported in arXiv:
 
 
-We discuss a statistical mechanics model of deep feed forward neural networks (FFN). By recasting FFNs in terms of an energy based model one can consistently obtain several known results and unerstand the origin and limitations of several heuristics used in the field. By providing a solid theoretical framework, we hope to provide new instruments that will help a systematic design of robust and explainable FFN.  
+We discuss a statistical mechanics model of deep feed forward neural networks (FFN). By recasting FFNs in terms of an energy based model one can consistently obtain several known results and unerstand the origin and limitations of some heuristics used in the deep learning literature. By providing a solid theoretical framework, we hope to provide new instruments that will help a systematic design of robust and explainable FFN.  
 
 From a thereotical point of view, we infer that FFN can be understood as performing three basic steps: *encoding*, *representation validation* and *propagation*. We obtain a set of natural activations -- such as *sigmoid*, *$\tanh$* and  *ReLu* -- together with a state-of-the-art one, recently obtained by Ramachandran et al. [Searching for Activation Functions](https://arxiv.org/abs/1710.05941), using an extensive search algorithm (there named Swish). 
 
