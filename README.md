@@ -1,5 +1,5 @@
 # Expectation propagation: a probabilistic view of Deep Feed Forward Networks
-Code and data used for the numerical experiments reported in arXiv:
+Code and data used for the numerical experiments reported in [arXiv:1805.08786](http://arxiv.org/abs/1805.08786)
 
 
 We discuss a statistical mechanics model of deep feed forward neural networks (FFN). By recasting FFNs in terms of an energy based model one can consistently obtain several known results and unerstand the origin and limitations of some heuristics used in the deep learning literature. By providing a solid theoretical framework, we hope to provide new instruments that will help a systematic design of robust and explainable FFN.  
