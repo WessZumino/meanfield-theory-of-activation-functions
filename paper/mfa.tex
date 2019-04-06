@@ -58,16 +58,20 @@
  \ead{pe.trevisanutto@nus.edu.sg}
 
 
-\fntext[fn1]{Current address: Microsoft AI }
+\fntext[fn1]{This work was initiated while in Bambu.}
 \cortext[cor] {Corresponding Author}
 
-\address[mirco]{Microsoft AI}
+\address[mirco]{Microsoft, Singapore}
 \address[thip]{Singapore University of Technology and Design, Singapore.}
 \address[paolo]{Graphene Research Centre and CA2DM, National University of Singapore, Singapore. }
 
 
 \begin{abstract}
-We present a statistical mechanics model of deep feed forward neural networks (FFN). Our energy-based approach naturally explains several known results and heuristics,  providing a solid theoretical framework and new instruments for a systematic development of FFN. We infer that FFN can be understood as performing three basic steps: {\it encoding}, { \it representation validation} and {\it propagation}. We obtain a set of natural activations -- such as {\it sigmoid}, $\tanh$ and {\it ReLU} -- together with a state-of-the-art one, recently introduced by Elfwig et al.~\cite{elfwig} and Ramachandran et al.~\cite{prajit}, the \textit{Swish}. In this article, we infer an explanation of this activation in probabilistic meaning terms, i.e. as an expected signal propagation. Moreover, we study the eigenvalue spectrum of the associated Hessian on classification tasks showing that the {\it Swish} naturally regularizes over all the variables. Lastly, the {\it Swish} allows for faster training and more consistent performances over a wide range of network architectures.
+We present a statistical mechanics model of deep neural networks, connecting the energy-based and the feed forward (FFN) approach.
+We infer that FFN can be understood as performing three basic steps: {\it encoding}, { \it representation validation} and {\it propagation}. From the meanfield solution of the model, we obtain a set of natural activations -- such as {\it sigmoid}, $\tanh$ and {\it ReLU} -- together with a state-of-the-art one, recently introduced heuristically by Elfwig et al.~\cite{elfwig} and Ramachandran et al.~\cite{prajit}, \textit{Swish}. In this article, we show how \textit{Swish} can be obtained as a meanfield solution of our model for the expected information propagating through the network and show how this tends to \textit{ReLU} in the limit of zero noise. To the best of our knowledge, this also provides the first derivation of the \textit{ReLu} activation function.
+
+Finally, we study the eigenvalue spectrum of the Hessian on an associated classification task, showing that \textit{Swish} acts as a natural regularizer and allows for faster training and more consistent performances over a wider range of network architectures.
+
 \end{abstract}
 
 \begin{keyword}
@@ -80,9 +84,10 @@ We present a statistical mechanics model of deep feed forward neural networks (F
 
 \section{Introduction}
 
-Advances in modern computing hardware and availability of massive datasets have empowered multilayer artificial neural networks, or deep learning, with unprecedented capabilities for image and speech recognition tasks. Despite these empirical success, theoretical understanding of why and when multilayer neural networks perform well remains limited. Only recently, theoretical efforts in this direction have been intensively reported. For example, recent works shed light on how FFN attains its expressive power~\cite{Poggio2017, LinTegmark2017, Raghu2017, Poole2016}, what contributes to its generalizability~\cite{Zhang2017,Dinh2017}, and how myriad parameters in the network affect the geometry of the loss function ~\cite{dauphin, ch, penn1, penn2}. Taken together, these theoretical results have paved the way for a systematic design of robust and explainable FFNs.
+Advances in modern computing hardware and availability of massive datasets have empowered multilayer artificial neural networks, or deep learning, with unprecedented capabilities for image and speech recognition tasks. Despite these empirical success, theoretical understanding of why and when multilayer neural networks perform well lags far behind~\cite{mezard1}.
+Only recently, theoretical efforts in this direction have been intensively reported. For example, recent works shed light on how FFN attains its expressive power~\cite{Poggio2017, LinTegmark2017, Raghu2017, Poole2016}, what contributes to its generalizability~\cite{Zhang2017,Dinh2017}, and how myriad parameters in the network affect the geometry of the loss function ~\cite{dauphin, ch, penn1, penn2}. Taken together, these theoretical results have paved the way for a systematic design of robust and explainable FFNs.
 
-Although FFN is one of the most studied and widely used neural network architectures, state-of-the-art models still largely inherit their building blocks from the decades-old multilayer perceptron (MLP). By augmenting MLP with modern optimization techniques such as dropout~\cite{srivastava2014}, non-linear activation functions that facilitate optimization protocols, and specialized complex network architectures~\cite{Krizhevsky}, to name a few, the FFN can be efficiently trained on large-scale datasets such as ImageNet or CIFAR to achieve low training and generalization errors.
+Although FFN is one of the most studied and widely used neural network architectures, state-of-the-art models still largely inherit their building blocks from the decades-old multilayer perceptron (MLP). By augmenting MLP with modern optimization techniques such as dropout~\cite{srivastava2014}, non-linear activation functions, and specialized complex network architectures~\cite{Krizhevsky}, to name a few, the FFN can be efficiently trained on large-scale datasets such as ImageNet or CIFAR to achieve low training and generalization errors.
 While these engineering feats improve the performance of FFN, a clear design principle behind these developments is still lacking. This leads to an unsystematic growth of the FFN complexity, which obscures its original exposition as a simple physical system that can perform non-linear classification and regression tasks.
 
 
@@ -271,9 +276,9 @@ In general, we find that  for {\it ReLU} networks $\gamma \neq 0$, while this is
 In Fig.~\eqref{fig:index} we show the $\alpha$ index, usually smaller for the {\it ReLU} network, and a finite value of $\gamma$ that slows down learning. We find $\gamma \simeq 0.45-0.6$ for {\it ReLU} and $\gamma=0$ for {\it Swish} and $\sigma$, both for the linear and non-linear task. We have also evaluated the fraction of residuals $e^{\mu} \simeq (\hat{y}^{\mu} - y^{\mu})/m$ closer to zero and found, surprisingly, that {\it Swish} greatly outperforms the other activations in minimizing the empirical error, see Fig.~\eqref{fig:res}.
 %
  In addition, we find that the eigenvalue distribution obtained with {\it ReLU}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in Ref.~\cite{penn1, levent}. In contrast,{\it Swish} show a significantly wider spread in the eigenvalue distribution at the end of training, see SM for details and discussions, together with results for the MNIST dataset.
- 
+
   {\it Swish} training networks can break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
-  This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization). In the case of Relu, the loss function minimization is almost immediately reached after 300 epocs. This is reflected in the Hessian eigenvectors that still coincide with the variables (in the Figure, the bar indicate the coefficient value of the eigenvectors). In the Sigmoid case, the Hessian eigenvectors are spread more uniformly on the variables showing a sort of graining regularization with respect to the Relu case. Nevertheless, there is still a concentration of high value Hessian coefficients in two sub-matrices. Lastly, in the Swish case, the Hessian coefficients are spread almost uniformly over the transformation matrix. We stress that this effect has some analogies with the regularization that prevents overfitting disfavouring large values for individual variables.   
+  This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization). In the case of Relu, the loss function minimization is almost immediately reached after 300 epocs. This is reflected in the Hessian eigenvectors that still coincide with the variables (in the Figure, the bar indicate the coefficient value of the eigenvectors). In the Sigmoid case, the Hessian eigenvectors are spread more uniformly on the variables showing a sort of graining regularization with respect to the Relu case. Nevertheless, there is still a concentration of high value Hessian coefficients in two sub-matrices. Lastly, in the Swish case, the Hessian coefficients are spread almost uniformly over the transformation matrix. We stress that this effect has some analogies with the regularization that prevents overfitting disfavouring large values for individual variables.
   In Fig. ( \ref{fig:eigvect2} ), the same analysis is repeated for the non-linear two hidden 8-2 layer network. Whereas in the Relu results still show a localization of variables in the eigenvectors, in the Sigmoid and Swish case the Hessian eigenvectors involve a broader number of variables. Nevertheless, in the Swish case, the number of large value coefficients is still less than in the Sigmoid case.
 %
 \begin{figure*}[t!]
@@ -295,14 +300,14 @@ In Fig.~\eqref{fig:index} we show the $\alpha$ index, usually smaller for the {\
 \begin{figure*}[t!]
 	\centering
 		\includegraphics[width=\textwidth]{eigen_lin.pdf}
-	
+
 \caption{  \label{fig:eigvect} Hessian eigenvectors (column) variables (row) for the linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
 \end{figure*}
 
 \begin{figure*}[t!]
 	\centering
 	\includegraphics[width=\textwidth]{eigen_nlin.pdf}
-	
+
 	\caption{  \label{fig:eigvect2}(left) Hessian eigenvectors (column) variables (row) for the non-linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
 \end{figure*}
 \section{Conclusions and perspectives}
