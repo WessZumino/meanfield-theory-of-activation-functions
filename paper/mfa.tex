@@ -105,7 +105,7 @@ A prototypical statistical mechanics formulation of Neural Networks is the {\it 
 %P(\mathbf{h}) =  \int d \mathbf{x} \, Q(\mathbf{h} | \mathbf{x} ) \, P(\mathbf{x}),
 %\end{equation}
 %
-where  $Q(\mathbf{h} | \mathbf{x} )$ is the transition function modelling the encoder. In DL, the latter is fixed by the forward pass, while the input data are drawn from some unknown distribution $P(\mathbf{x})$. We can follow two different paths: fix the value of $\mathbf{x}$ on the observed (empirical) sequence, or assume the form of the distribution from which $\mathbf{x}$ has been sampled from; here we choose the former option. Consider then the empirical estimator $P(\mathbf{x}) =  \prod_{\mu=1}^m  \delta( \mathbf{x} - \mathbf{x}^{\mu} )$, where the Dirac-delta function  fixes the input on the observed sequence. As for the transition function, it enforces the information processing performed by the ``soma'' of the artificial neuron; in  DL ,this consists of creating a linear combination of the input information. Information conservation, enforces an additional constrain on the coefficients of the transformation, namely $\sum_i \, w_{ij}^{[l]} =1$ $\forall l = 1, ..., L$, formally equivalent to the conservation of charge in an electronic system and to an $L_1$ regularisation in DL:
+where  $Q(\mathbf{h} | \mathbf{x} )$ is the transition function modeling the encoder. In DL, the latter is fixed by the forward pass, while the input data are drawn from some unknown distribution $P(\mathbf{x})$. We can follow two different paths: fix the value of $\mathbf{x}$ on the observed sequence, or assume the form of the distribution from which $\mathbf{x}$ has been sampled from; here we choose the former option. Consider then the empirical estimator $P(\mathbf{x}) =  \prod_{\mu=1}^m  \delta( \mathbf{x} - \mathbf{x}^{\mu} )$, where the Dirac-delta function  fixes the input on the observed sequence. As for the transition function, it enforces the information processing performed by the ``soma'' of the artificial neuron; in  DL ,this consists of creating a linear combination of the input information. Information conservation, enforces an additional constrain on the coefficients of the transformation, namely $\sum_i \, w_{ij}^{[l]} =1$ $\forall l = 1, ..., L$, formally equivalent to the conservation of charge in an electronic system and to an $L_1$ regularization in DL:
 %
 \begin{align} \label{eq:ps2}
 P(\mathbf{h}) &= \int {d\mathbf{x}} \, \Gamma^{[1]} \, \delta\left( \mathbf{h} -  \mathbf{w}^{T} \, \mathbf{x} - \mathbf{b} \right) \prod_{\mu =1}^m  \delta ( \mathbf{x} - \mathbf{x}^{\mu} )  \\ \nonumber
@@ -115,7 +115,7 @@ P(\mathbf{h}) &= \int {d\mathbf{x}} \, \Gamma^{[1]} \, \delta\left( \mathbf{h} -
 %Eq.~\eqref{eq:ps2} can be interpreted in different ways: it is akin to the real space block-spin renormalization developed by Kadanoff, reformulated in the more general language of probability theory~\cite{roberto, ma, cassandro} or it can be seen as a functional ``change of variables''. 
 The relation between  DL and the renormalization group (RG) was previously observed in the context of restricted Boltzmann machine (RMB)~\cite{mehta}; in A.b we show how this concept generalizes to FFN via Eq.~\eqref{eq:ps2}.
 
-Once $\mathbf{h}$ has been computed, the information passes through the ``synaptic'' gate, and transmitted with a certain probability if it exceeds the threshold potential $b_i$. The core task at hand is to determine the state of the gate (open/close). The absence of lateral connections in FFNs means that each synaptic gate is only influenced by its receptive signal as the intralayer correlations are taken -- a priori-- to be zero. Given a statistical ensemble of hidden binary gates, the most likely distribution  can be obtained by maximising its entropy, subject to constraints imposed by the conserved quantities, i.e. the first and second moments of the data~\cite{zecchina, mckay}. However, in the absence of lateral connections, the entropy functional of the hidden gate $s_i$ does not account for the second moment.
+Once $\mathbf{h}$ has been computed, the information passes through the ``synaptic'' gate, and transmitted with a certain probability if it exceeds the threshold potential $b_i$. The core task at hand is to determine the state of the gate (open/close). The absence of lateral connections in FFNs means that each synaptic gate is only influenced by its receptive signal as the intralayer correlations are taken -- a priori-- to be zero. Given a statistical ensemble of hidden binary gates, the most likely distribution  can be obtained by maximizing its entropy, subject to constraints imposed by the conserved quantities, i.e. the first and second moments of the data~\cite{zecchina, mckay}. However, in the absence of lateral connections, the entropy functional of the hidden gate $s_i$ does not account for the second moment.
 %
 %\begin{align} \label{eq:entropy2}
 %\mathscr{F} &= - \sum_{\mathbf{s}} P(\mathbf{s}) \, \log P(\mathbf{s}) + \eta \left( \sum_{\mathbf{s}} P(\mathbf{s}) -1\right) \\ \nonumber
@@ -125,19 +125,30 @@ Once $\mathbf{h}$ has been computed, the information passes through the ``synapt
 %where $\lambda_i$ are Lagrange multipliers chosen to reproduce the first moment of the data,  while $\eta$ enforces normalization.
 Functionally varying with respect to the probability $P(\mathbf{s)}$ and solving for the Lagrange multipliers, one  obtains~\cite{roberto}:
 %
-\begin{align} \label{eq:entropy4}
-P(\mathbf{s} | \mathbf{h}) &= \frac{1}{Z} \, e^{ \sum_i \beta_i  \, s_i \, h_i } \\ \nonumber
-Z[\mathbf{h}] &= \prod_i \, \sum_{s_i = \{ 0,1\} } e^{\beta_i \, s_i \, h_i}  =\prod_i \, \left( 1+ e^{\beta_i \, h_i} \right),
-\end{align}
+%\begin{align} \label{eq:entropy4}
+%P(\mathbf{s} | \mathbf{h}) &= \frac{1}{Z} \, e^{ \sum_i \beta_i  \, s_i \, h_i } \\ \nonumber
+%Z[\mathbf{h}] &= \prod_i \, \sum_{s_i = \{ 0,1\} } e^{\beta_i \, s_i \, h_i}  =\prod_i \, \left( %1+ e^{\beta_i \, h_i} \right),
+%\end{align}
 %
+\begin{equation} \label{eq:entropy4}
+P(\mathbf{s} | \mathbf{h}) = \frac{e^{ \sum_i \beta_i  \, s_i \, h_i }}{\prod_i \, \left( 1+ e^{\beta_i \, h_i} \right)} % \, e^{ \sum_i \beta_i  \, s_i \, h_i } %\\ \nonumber
+%Z[\mathbf{h}] &= \prod_i \, \sum_{s_i = \{ 0,1\} } e^{\beta_i \, s_i \, h_i}  =,
+\end{equation}
+%
+
 where $\beta_i$ encodes the noise.  In a physical system, $\beta_i$ is the inverse temperature in units of Boltzmann's constant and in equilibrium it is the same for each $s_i$; however, here the network is only in a local equilibrium as the units are not allowed to exchange ``energy'' (information) among themselves due to the lack of pairwise interactions. We have introduced $P(\mathbf{s} | \mathbf{h})$ to denote the conditional probability of $\mathbf{s}$ given the signal $\mathbf{h}$ --  and the partition function $Z$. Finally, given the distribution of the coarse grained inputs and the conditional probability of the channels $P(\mathbf{s}|\mathbf{h})$, one is left evaluating the channel transmission probability
 %
-\begin{align} \label{eq:ps3}
-P(\mathbf{s}) &= \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{1}{Z} e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}   \\ \nonumber
-Z &= \frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} \left[1+ e^{\beta_i \, h^{\mu}_i} \right] =\frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} Z_{i, \mu},
-\end{align}
+\begin{equation} \label{eq:ps3}
+P(\mathbf{s}) = \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}}{m^{-1}\prod_{\mu=1}^m \prod_{i=1}^{n_1} Z_{i, \mu}}   % \\ \nonumber
+%Z &= \frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} \left[1+ e^{\beta_i \, h^{\mu}_i} \right] %=\frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} Z_{i, \mu},
+\end{equation}
+%\begin{align} \label{eq:ps3}
+%P(\mathbf{s}) &= \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{1}{Z} e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}   \\ \nonumber
+%Z &= \frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} \left[1+ e^{\beta_i \, h^{\mu}_i} \right] =\frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} Z_{i, \mu},
+%\end{align}
+
 %
-where $\hat{h}^{\mu}_i = \sum_{j} w^{[1]}_{ij} \, x^{\mu}_j + b_i $,   $Z_{i, \mu}$ is the partition function per example/index and we have identified the simple coarse grained Hamiltonian $\mathscr{H}_i = -  \, \sum_{j=1}^n \, s_i \, w^{[1]}_{ij} x^{\mu}_j -  \, s_i \, b_i$.
+where $\hat{h}^{\mu}_i = \sum_{j} w^{[1]}_{ij} \, x^{\mu}_j + b_i $,   $Z_{i, \mu}= 1+ e^{\beta_i \, h^{\mu}_i}$ is the partition function per example/index and we have identified the simple coarse grained Hamiltonian $\mathscr{H}_i = -  \, \sum_{j=1}^n \, s_i \, w^{[1]}_{ij} x^{\mu}_j -  \, s_i \, b_i$.
 %
 %\begin{equation} \label{eq:Hamilton}
 %\mathscr{H}_i = -  \, \sum_{j=1}^n \, s_i \, w^{[1]}_{ij} x^{\mu}_j -  \, s_i \, b_i.
@@ -193,9 +204,10 @@ At the heart of any FFN model is the back propagation algorithm~\cite{hertz, bis
 \frac{\partial \mathscr{L}}{\partial \mathbf{w}_L } =  \frac{1}{m} \sum_{\mu=1}^m \, \left[ \mathbf{e}^{\mu} \, \mathbf{g}(\hat{\mathbf{h}}^{\mu} _L) \right]  \mathbf{a}_{L-1}
  \end{equation}
 %
-where $\mathbf{e}^{\mu}\propto y^{\mu} - \hat{y}^{\mu}$ is the residual error and $\hat{\mathbf{g}}(\mathbf{h}^{\mu}_l) =  \boldsymbol{\sigma}(\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)[ 1 + \hat{\mathbf{h}}^{\mu}_l \boldsymbol{\beta}_l \, \boldsymbol{\sigma}(-\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l) ] $. In the optimization phase we look for stationary points defined by $\partial \mathscr{L}/\partial \boldsymbol{\theta}^{\alpha}_l=0$, where $\boldsymbol{\theta}^{\alpha}_l = \left\{ \mathbf{w}_l, \mathbf{b}_l, \boldsymbol{\beta}_l \right\} $. For a linear network, this condition is  strictly satisfied if $ \mathbf{e}^{\mu}=0$. However, in a non linear network we can also have $g(\hat{\mathbf{h}}^{\mu})=0$. In principle, there may be situations in which $\mathbf{e}^{\mu}$ is far from zero but $g(\hat{\mathbf{h}}^{\mu}) \simeq 0$, in which case learning will not be effective. For a $\sigma$ activation, $\mathbf{g}(\hat{\mathbf{h}}^{\mu}_l) = \boldsymbol{\sigma}(\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)\boldsymbol{\sigma}(-\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)$, commonly known in physics as a phase space factor~\cite{roberto}, describing the transition probability from an occupied to an empty state. Ref.~\cite{tishby1, tishby2} show that there are two distinct phases of learning: empirical error minimization (the residual) and representation learning. We can identify the latter with the task of optimizing $g(\hat{\mathbf{h}}^{\mu})$. When $\hat{h}_i \gg 1/\beta_i$, i.e. when the signal greatly exceeds the noise, then $\sigma( \beta_i \,\hat{ h}_i) \equiv P(s_i=1| \bar{x}_i)  \simeq 1$ ($\bar{x}_i$ is the unit's input) and the back propagated signal is small, being proportional to $g(\hat{h} ) \simeq 0$. We then have the paradoxical situation in which, although the lower dimensional representation of the information is considered to be relevant, learning is likely to be inefficient.
+where $\mathbf{e}^{\mu}\propto y^{\mu} - \hat{y}^{\mu}$ is the residual error (R.E.) and $\hat{\mathbf{g}}(\mathbf{h}^{\mu}_l) =  \boldsymbol{\sigma}(\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)[ 1 + \hat{\mathbf{h}}^{\mu}_l \boldsymbol{\beta}_l \, \boldsymbol{\sigma}(-\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l) ] $. In the optimization phase we look for stationary points defined by $\partial \mathscr{L}/\partial \boldsymbol{\theta}^{\alpha}_l=0$, where $\boldsymbol{\theta}^{\alpha}_l = \left\{ \mathbf{w}_l, \mathbf{b}_l, \boldsymbol{\beta}_l \right\} $. For a linear network, this condition is  strictly satisfied if $ \mathbf{e}^{\mu}=0$. However, in a non linear network we can also have $g(\hat{\mathbf{h}}^{\mu})=0$. In principle, there may be situations in which $\mathbf{e}^{\mu}$ is far from zero but $g(\hat{\mathbf{h}}^{\mu}) \simeq 0$, in which case learning will not be effective. For a $\sigma$ activation, $\mathbf{g}(\hat{\mathbf{h}}^{\mu}_l) = \boldsymbol{\sigma}(\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)\boldsymbol{\sigma}(-\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)$ \footnote{in physics,the phase space factor~\cite{roberto}}.%, describing the transition probability from an occupied to an empty state
+ Refs.~\cite{tishby1, tishby2} show that there are two distinct phases of learning: empirical error minimization (the residual) and representation learning. We can identify the latter with the task of optimizing $g(\hat{\mathbf{h}}^{\mu})$. When $\hat{h}_i \gg 1/\beta_i$, i.e. when the signal greatly exceeds the noise, then $\sigma( \beta_i \,\hat{ h}_i) \equiv P(s_i=1| \bar{x}_i)  \simeq 1$ ($\bar{x}_i$ is the unit's input) and the back propagated signal is small, being proportional to $g(\hat{h} ) \simeq 0$. We then have the paradoxical situation in which, although the lower dimensional representation of the information is considered to be relevant, learning is likely to be inefficient.
 
-Consider now the same limiting behaviour for {\it Swish}. If $\hat{h}_i \gg 1/\beta_i$ we now have $g(\hat{h}^{\mu}_i)\simeq 1$, i.e. the representation learning phase is completed and learning moves towards minimising the empirical error. In the opposite limit, the signal is much smaller than the noise and learning is impossible, as expected. Finally, in the noiseless case one obtains the {\it ReLU} solution $g(\hat{h}^{\mu}_i) = (1, 0) $, for $\hat{h}_i $ respectively greater or smaller than zero. This corresponds to a purely ``excitatory'' network, in which representation unlearning is not possible. In other words, the fact that {\it Swish} can be negative for $\sigma(\hat{h})/\beta <\hat{h}<0$ allows for greater flexibility and the possibility to avoid plateaus surrounding local minima and saddle-points. In Ref.~\cite{dauphin}, it was proposed that plateaus of zero (or small) curvatures in the loss are mostly responsible for slowing down or preventing convergence of gradient descent. The following section provides a numerical analysis to support this picture.
+Consider now the same limiting behavior for {\it Swish}. If $\hat{h}_i \gg 1/\beta_i$ we now have $g(\hat{h}^{\mu}_i)\simeq 1$, i.e. the representation learning phase is completed and learning moves towards minimising the empirical error. In the opposite limit, the signal is much smaller than the noise and learning is impossible, as expected. Finally, in the noiseless case one obtains the {\it ReLU} solution $g(\hat{h}^{\mu}_i) = (1, 0) $, for $\hat{h}_i $ respectively greater or smaller than zero. This corresponds to a network, in which representation unlearning is not possible. The fact that {\it Swish} can be negative for $\sigma(\hat{h})/\beta <\hat{h}<0$ allows for the possibility to avoid plateaus surrounding local minima and saddle-points. In Ref.~\cite{dauphin}, it was proposed that plateaus of zero (or small) curvatures in the loss are mostly responsible for preventing convergence of gradient descent (as it will be displayed in the next section). %The following section provides a numerical analysis to support this picture.
 %
 %\begin{figure*}[t!]
 %\centering
@@ -226,39 +238,6 @@ We have also evaluated the fraction of residuals $e^{\mu} \simeq (\hat{y}^{\mu} 
 %
 In addition, we find that the eigenvalue distribution obtained with {\it ReLU}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in Ref.~\cite{penn1, levent}. In contrast,{\it Swish} show a significantly wider spread in the eigenvalue distribution at the end of training, see sec. ~\eqref{a:loss} for details and discussions, together with results for the MNIST dataset.
 
-{\it Swish} training networks can break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
-This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization). %In the case of Relu, the loss function minimization is almost immediately reached after 300 epocs. This is reflected in the Hessian eigenvectors that still coincide with the variables (in the Figure, the bar indicate the coefficient value of the eigenvectors). In the Sigmoid case, the Hessian eigenvectors are spread more uniformly on the variables showing a sort of graining regularization with respect to the Relu case. Nevertheless, there is still a concentration of high value Hessian coefficients in two sub-matrices. Lastly, in the Swish case, the Hessian coefficients are spread almost uniformly over the transformation matrix. We stress that this effect has some analogies with the regularization that prevents overfitting disfavouring large values for individual variables.
-%In Fig. ( \ref{fig:eigvect2} ), the same analysis is repeated for the non-linear two hidden 8-2 layer network. Whereas in the Relu results still show a localization of variables in the eigenvectors, in the Sigmoid and Swish case the Hessian eigenvectors involve a broader number of variables. Nevertheless, in the Swish case, the number of large value coefficients is still less than in the Sigmoid case.
-%
-%\begin{figure*}[t!]
-%\centering
-%	\begin{subfigure}[b]{0.10}
-%	\includegraphics[width=\textwidth]{residues.pdf}
-%	\label{fig:res}
-%	\end{subfigure}
-%	~
-%	\begin{subfigure}[b]{0.10}
-%	\includegraphics[width=\textwidth]{gamma.pdf}
-%	\label{fig:gamma}
-%	\end{subfigure}
-%	 %
-%\caption{ \label{fig:res}  Fraction of zero residuals as a function of training epochs for the single 8-2 layer network with linear (top/bottom left) and non-linear (top/bottom right) decision boundary. %(right) Fraction of zero eigenvalues. (Top left/right) linear/non-linear dataset with a single, 10 units hidden layer. (Bottom left/right)  linear/non-linear dataset with two hidden layers of 8 and 2 units respectively. }
-%\end{figure*}
-%
-
-%\begin{figure*}[t!]
-%	\centering
-%		\includegraphics[width=\textwidth]{eigen_lin.pdf}
-
-%\caption{  \label{fig:eigvect} Hessian eigenvectors (column) variables (row) for the linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
-%\end{figure*}
-
-%\begin{figure*}[t!]
-%	\centering
-%	\includegraphics[width=\textwidth]{eigen_nlin.pdf}
-
-%	\caption{  \label{fig:eigvect2}(left) Hessian eigenvectors (column) variables (row) for the non-linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
-%\end{figure*}
 
 \section{Conclusions and perspectives}
 %
@@ -328,6 +307,43 @@ S[\lambda_c] &= \frac{1}{m} \sum_{\mu} \left\{ y^{\mu} \, \log [ q^{\mu}( \bolds
 \end{align}
 %
 up to an additive constant depending only on $y$. The final step consists in evaluating the $\theta$ integral again for $m \gg 1$, and take the maximum likelihood value $\theta^*$.
+
+\section{Numerical Analysis of the Hessian eigenvectors}
+In this section, we describe the nature of the Hessian eigenvectors
+In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization). In the case of Relu, the loss function minimization is almost immediately reached after 300 epocs. This is reflected in the Hessian eigenvectors that still coincide with the variables (in the Figure, the bar indicate the coefficient value of the eigenvectors). In the Sigmoid case, the Hessian eigenvectors are spread more uniformly on the variables showing a sort of graining regularization with respect to the Relu case. Nevertheless, there is still a concentration of high value Hessian coefficients in two sub-matrices. Lastly, in the Swish case, the Hessian coefficients are spread almost uniformly over the transformation matrix. We stress that this effect has some analogies with the regularization that prevents overfitting disfavoring large values for individual variables.
+In Fig. ( \ref{fig:eigvect2} ), the same analysis is repeated for the non-linear two hidden 8-2 layer network. Whereas in the Relu results still show a localization of variables in the eigenvectors, in the Sigmoid and Swish case the Hessian eigenvectors involve a broader number of variables. Nevertheless, in the Swish case, the number of large value coefficients is still less than in the Sigmoid case.
+{\it Swish} training networks can break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
+This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization).
+%
+%\begin{figure*}[t!]
+%\centering
+%	\begin{subfigure}[b]{0.10}
+%	\includegraphics[width=\textwidth]{residues.pdf}
+%	\label{fig:res}
+%	\end{subfigure}
+%	~
+%	\begin{subfigure}[b]{0.10}
+%	\includegraphics[width=\textwidth]{gamma.pdf}
+%	\label{fig:gamma}
+%	\end{subfigure}
+%	 %
+%\caption{ \label{fig:res}  Fraction of zero residuals as a function of training epochs for the single 8-2 layer network with linear (top/bottom left) and non-linear (top/bottom right) decision boundary. %(right) Fraction of zero eigenvalues. (Top left/right) linear/non-linear dataset with a single, 10 units hidden layer. (Bottom left/right)  linear/non-linear dataset with two hidden layers of 8 and 2 units respectively. }
+%\end{figure*}
+%
+
+%\begin{figure*}[t!]
+%	\centering
+%		\includegraphics[width=\textwidth]{eigen_lin.pdf}
+
+%\caption{  \label{fig:eigvect} Hessian eigenvectors (column) variables (row) for the linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
+%\end{figure*}
+
+%\begin{figure*}[t!]
+%	\centering
+%	\includegraphics[width=\textwidth]{eigen_nlin.pdf}
+
+%	\caption{  \label{fig:eigvect2}(left) Hessian eigenvectors (column) variables (row) for the non-linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
+%\end{figure*}
 
 
 %\section*{References}
