@@ -76,7 +76,7 @@ A standard task in supervised learning is to determine an input/output relation 
 %\end{align}
 %
 %
- where we have used the chain rule~\eqref{a:loss} and introduced the output layer ($\hat{ \mathbf{y}}$). Once $P(\hat{\mathbf{y}})$ has been learned, one can obtain the loss function by taking the log-likelihood $\mathscr{L} = - \log P(\mathbf{y})$; for example, in a binary classification problem, $P(\hat{\mathbf{y}}[\boldsymbol{\theta}])$ is Bernoulli and parametrized by $\boldsymbol{\theta_l} = \{\mathbf{W}_l,\mathbf{ b}_l \}$, being the weights and biases of the neural network, with $l \in [1, L]$ the number of hidden layers. In this case, the loss function is the binary cross-entropy, but other statistical assumptions lead to different Losses; see~\eqref{a:loss} for a meanfield derivation of the cross-entropy. To motivate the model, in the next section we begin by discussing a (physical) dimensional inconsistency in the standard formulation of {\it forward propagation} in FFNs, and how this can be reconciled within the proposed framework.
+ where we have used the chain rule~\eqref{a:loss} and introduced the output layer ($\hat{ \mathbf{y}}$). Once $P(\hat{\mathbf{y}})$ has been learned, one can obtain the loss function as $\mathscr{L} = - \log P(\mathbf{y})$; for example, in a binary classification problem, $P(\hat{\mathbf{y}}[\boldsymbol{\theta}])$ is Bernoulli and parametrized by $\boldsymbol{\theta_l} = \{\mathbf{W}_l,\mathbf{ b}_l \}$, being the weights and biases, with $l \in [1, L]$ the number of hidden layers. In this case, the loss function is the binary cross-entropy, but other statistical assumptions lead to different Losses; see~\eqref{a:loss} for a meanfield derivation of the cross-entropy. In the next section we discuss a (physical) dimensional inconsistency in the standard formulation of {\it forward propagation}, and how this can be reconciled within the proposed framework.
 
 %\begin{figure*}[t!]
  %\centering
@@ -87,11 +87,11 @@ A standard task in supervised learning is to determine an input/output relation 
 
 \subsection{Motivations} \label{sub:mot}
 %
- Motivated by neurobiology and in analogy with the communication channel scheme in information theory~\cite{mckay, jaynes}, we regard the input vector $x^{\mu}_i$ as the information source entering the processing units (neurons) of the network, while the units constitute the encoders. Quite generally, the encoders can either build a lower (compression) or higher dimensional (redundant) representation of the input data by means of a properly defined transition function. In a FFN, the former corresponds to a compression layer (fewer units) while the latter to an expansion layer (more units). If the encoded information constitutes an informative representation of the output signal (given the input), it is passed  over to the next layer for further processing until the output layer is reached. In the biological neuron, this last step is accomplished by the synaptic bouton, that releases information whether or not the input signal exceeds a local bias potential $b_i$. Both in the brain and in electronic devices, the input information is often conveyed in the form of an electric signal, with the electron charge being the basic unit of information, the signal has dimension (units) of $Coulomb$ in SI. For an image, the information is the brightness level of each pixel, physically proportional to the current passing through it; on a computer, this is encoded in bits. Clearly, a linear combination of the input signals, together with the bias, has to preserve dimensions:
+ Motivated by neurobiology and in analogy with the communication channel scheme in information theory~\cite{mckay, jaynes}, we regard the input vector $x^{\mu}_i$ as the information source entering the processing units (neurons) of the network, while the units constitute the encoders. Quite generally, the encoders can either build a lower (compression) or higher dimensional (redundant) representation of the input data by means of a properly defined transition function. In a FFN, the former corresponds to a compression layer (fewer units) while the latter to an expansion layer (more units). If the encoded information constitutes an informative representation of the output signal (given the input), it is passed  over to the next layer for further processing until the output layer is reached. In the biological neuron, this last step is accomplished by the synaptic bouton, that releases information whether or not the input signal exceeds a local bias potential $b_i$. Both in the brain and in electronic devices, the input information is often conveyed in the form of an electric signal, with the electron charge being the basic unit of information, the signal has dimension (units) of $Coulomb$ in SI. For an image, the information is the brightness level of each pixel, physically proportional to the current passing through it; on a computer, this is encoded in bits. Clearly, a linear combination of the input signals, together with the bias, has to preserve dimensions: $h^{\mu}_i = \sum_{j=1}^{n} \, w_{ij} x^{\mu}_j + b_i$,
 %
-\begin{equation} \label{eq:lincomb}
-h^{\mu}_i = \sum_{j=1}^{n} \, w_{ij} x^{\mu}_j + b_i,
-\end{equation}
+%\begin{equation} \label{eq:lincomb}
+%h^{\mu}_i = \sum_{j=1}^{n} \, w_{ij} x^{\mu}_j + b_i,
+%\end{equation}
 %
 where $i \in [1, n_1]$ indices the receiving units in the first layer and the weight matrix $ w_{ij}$ is the coefficient of the linear combination and it is dimensionless.
 
@@ -107,12 +107,15 @@ A prototypical statistical mechanics formulation of Neural Networks is the {\it 
 %
 where  $Q(\mathbf{h} | \mathbf{x} )$ is the transition function modelling the encoder. In DL, the latter is fixed by the forward pass, while the input data are drawn from some unknown distribution $P(\mathbf{x})$. We can follow two different paths: fix the value of $\mathbf{x}$ on the observed (empirical) sequence, or assume the form of the distribution from which $\mathbf{x}$ has been sampled from; here we choose the former option. Consider then the empirical estimator $P(\mathbf{x}) =  \prod_{\mu=1}^m  \delta( \mathbf{x} - \mathbf{x}^{\mu} )$, where the Dirac-delta function  fixes the input on the observed sequence. As for the transition function, it enforces the information processing performed by the ``soma'' of the artificial neuron; in  DL ,this consists of creating a linear combination of the input information. Information conservation, enforces an additional constrain on the coefficients of the transformation, namely $\sum_i \, w_{ij}^{[l]} =1$ $\forall l = 1, ..., L$, formally equivalent to the conservation of charge in an electronic system and to an $L_1$ regularisation in DL:
 %
-\begin{align} \label{eq:ps2}
-P(\mathbf{h}) &= \int {d\mathbf{x}} \, \Gamma^{[1]} \, \delta\left( \mathbf{h} -  \mathbf{w}^{T} \, \mathbf{x} - \mathbf{b} \right) \prod_{\mu =1}^m  \delta ( \mathbf{x} - \mathbf{x}^{\mu} )  \\ \nonumber
-\Gamma^{[1]} &= \prod_{j=1}^n \delta\left( \sum_{i=1}^{n_1} w_{ij}^{[1]} -1 \right) .
-\end{align}
+\begin{equation} \label{eq:ps2}
+P(\mathbf{h}) = \int {d\mathbf{x}} \, \Gamma^{[1]} \, \delta\left( \mathbf{h} -  \mathbf{w}^{T} \, \mathbf{x} - \mathbf{b} \right) \prod_{\mu =1}^m  \delta ( \mathbf{x} - \mathbf{x}^{\mu} )
+\end{equation}
+
+\begin{equation} \nonumber
+\Gamma^{[1]} = \prod_{j=1}^n \delta\left( \sum_{i=1}^{n_1} w_{ij}^{[1]} -1 \right) .
+\end{equation}
 %
-%Eq.~\eqref{eq:ps2} can be interpreted in different ways: it is akin to the real space block-spin renormalization developed by Kadanoff, reformulated in the more general language of probability theory~\cite{roberto, ma, cassandro} or it can be seen as a functional ``change of variables''. 
+%Eq.~\eqref{eq:ps2} can be interpreted in different ways: it is akin to the real space block-spin renormalization developed by Kadanoff, reformulated in the more general language of probability theory~\cite{roberto, ma, cassandro} or it can be seen as a functional ``change of variables''.
 The relation between  DL and the renormalization group (RG) was previously observed in the context of restricted Boltzmann machine (RMB)~\cite{mehta}; in A.b we show how this concept generalizes to FFN via Eq.~\eqref{eq:ps2}.
 
 Once $\mathbf{h}$ has been computed, the information passes through the ``synaptic'' gate, and transmitted with a certain probability if it exceeds the threshold potential $b_i$. The core task at hand is to determine the state of the gate (open/close). The absence of lateral connections in FFNs means that each synaptic gate is only influenced by its receptive signal as the intralayer correlations are taken -- a priori-- to be zero. Given a statistical ensemble of hidden binary gates, the most likely distribution  can be obtained by maximising its entropy, subject to constraints imposed by the conserved quantities, i.e. the first and second moments of the data~\cite{zecchina, mckay}. However, in the absence of lateral connections, the entropy functional of the hidden gate $s_i$ does not account for the second moment.
@@ -125,17 +128,21 @@ Once $\mathbf{h}$ has been computed, the information passes through the ``synapt
 %where $\lambda_i$ are Lagrange multipliers chosen to reproduce the first moment of the data,  while $\eta$ enforces normalization.
 Functionally varying with respect to the probability $P(\mathbf{s)}$ and solving for the Lagrange multipliers, one  obtains~\cite{roberto}:
 %
-\begin{align} \label{eq:entropy4}
-P(\mathbf{s} | \mathbf{h}) &= \frac{1}{Z} \, e^{ \sum_i \beta_i  \, s_i \, h_i } \\ \nonumber
-Z[\mathbf{h}] &= \prod_i \, \sum_{s_i = \{ 0,1\} } e^{\beta_i \, s_i \, h_i}  =\prod_i \, \left( 1+ e^{\beta_i \, h_i} \right),
-\end{align}
+\begin{equation} \label{eq:entropy4}
+P(\mathbf{s} | \mathbf{h}) = \frac{1}{Z} \, e^{ \sum_i \beta_i  \, s_i \, h_i } \\ \nonumber
+\end{equation}
+\begin{equation} \nonumber
+Z[\mathbf{h}] = \prod_i \, \sum_{s_i = \{ 0,1\} } e^{\beta_i \, s_i \, h_i}  =\prod_i \, \left( 1+ e^{\beta_i \, h_i} \right),
+\end{equation}
 %
 where $\beta_i$ encodes the noise.  In a physical system, $\beta_i$ is the inverse temperature in units of Boltzmann's constant and in equilibrium it is the same for each $s_i$; however, here the network is only in a local equilibrium as the units are not allowed to exchange ``energy'' (information) among themselves due to the lack of pairwise interactions. We have introduced $P(\mathbf{s} | \mathbf{h})$ to denote the conditional probability of $\mathbf{s}$ given the signal $\mathbf{h}$ --  and the partition function $Z$. Finally, given the distribution of the coarse grained inputs and the conditional probability of the channels $P(\mathbf{s}|\mathbf{h})$, one is left evaluating the channel transmission probability
 %
-\begin{align} \label{eq:ps3}
-P(\mathbf{s}) &= \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{1}{Z} e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}   \\ \nonumber
-Z &= \frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} \left[1+ e^{\beta_i \, h^{\mu}_i} \right] =\frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} Z_{i, \mu},
-\end{align}
+\begin{equation} \label{eq:ps3}
+P(\mathbf{s}) = \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{1}{Z} e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}
+\end{equation}
+\begin{equation} \nonumber
+Z = \frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} \left[1+ e^{\beta_i \, h^{\mu}_i} \right] =\frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} Z_{i, \mu},
+\end{equation}
 %
 where $\hat{h}^{\mu}_i = \sum_{j} w^{[1]}_{ij} \, x^{\mu}_j + b_i $,   $Z_{i, \mu}$ is the partition function per example/index and we have identified the simple coarse grained Hamiltonian $\mathscr{H}_i = -  \, \sum_{j=1}^n \, s_i \, w^{[1]}_{ij} x^{\mu}_j -  \, s_i \, b_i$.
 %
@@ -215,13 +222,13 @@ Consider now the same limiting behaviour for {\it Swish}. If $\hat{h}_i \gg 1/\b
 \section{Numerical Analysis}
 %
 A thorough performance analysis of {\it Swish} versus other popular choices of activations was carried out in Ref.~\cite{prajit}, where it was shown that the former outperformed all other choices on image classification tasks using a convolutional structure.% It was also noted that to take full advantage of {\it Swish} one should also reconsider the way convolution is performed; for the moment, we %leave this interesting point open and, we rather focus on understanding the optimization dynamics in pure FFNs.
-Hereafter,  we considered both artificial and experimental datasets trained with ADAM gradient descent~\cite{adam}. 
+Hereafter,  we considered both artificial and experimental datasets trained with ADAM gradient descent~\cite{adam}.
 Given that both datasets lead to the same qualitative features, our analysis is focused on the former and discuss the latter, together with additional details in the ~\eqref{a:loss}.
 
-In Fig.~\eqref{fig:index}(a) we show the loss functions for two binary classification tasks: a linear and a non-linear one, each trained with one and two hidden layers. For the linear task with a single, 10 units layer (adding more units does not improve performance), all three activations attain full train/test accuracy but {\it Swish} is the fastest converging.  For the non-linear task, {\it ReLU} quickly converges to a suboptimal plateau. To obtain a better understanding, we have evaluated two different indices: the fraction of negative eigenvalues of the Hessian --$\alpha$--(Fig.~\ref{fig:index}(b) )and the fraction of zero eigenvalues -- $\gamma$ --  (Fig.~\ref{fig:res}(b) ). The former measures the ratio of descent to ascent directions on the energy landscape; when $\alpha$ is large, gradient descent can quickly escape a critical point -- a saddle point in this case --  due to the existence of multiple unstable directions. However, when a critical point exhibits multiple near-zero eigenvalues, roughly captured by $\gamma$:%, the energy landscape in this neighborhood consists of several near-flat (to second-order) directions; 
+In Fig.~\eqref{fig:index}(a) we show the loss functions for two binary classification tasks: a linear and a non-linear one, each trained with one and two hidden layers. For the linear task with a single, 10 units layer (adding more units does not improve performance), all three activations attain full train/test accuracy but {\it Swish} is the fastest converging.  For the non-linear task, {\it ReLU} quickly converges to a suboptimal plateau. To obtain a better understanding, we have evaluated two different indices: the fraction of negative eigenvalues of the Hessian --$\alpha$--(Fig.~\ref{fig:index}(b) )and the fraction of zero eigenvalues -- $\gamma$ --  (Fig.~\ref{fig:res}(b) ). The former measures the ratio of descent to ascent directions on the energy landscape; when $\alpha$ is large, gradient descent can quickly escape a critical point -- a saddle point in this case --  due to the existence of multiple unstable directions. However, when a critical point exhibits multiple near-zero eigenvalues, roughly captured by $\gamma$:%, the energy landscape in this neighborhood consists of several near-flat (to second-order) directions;
 in this situation, gradient descent will slowly decrease the training loss. In Ref.~\cite{dauphin} it was noted that energy plateaus are responsible for slowing down or preventing learning. In this case the eigenvalues of the Hessian are zero. Nevertheless, Noether's theorem infers that these eigenvalues are originated by symmetries of the loss function that somehow prevent lower local minima. %In this case the analysis is not conclusive and higher order inspection is needed to reveal possible inflection points.
 In general, we find that  for {\it ReLU} networks $\gamma \neq 0$, while this is typically not the case for both {\it Swish} and sigmoid-networks. Taking the two layer case as a representative example, we show that {\it ReLU} networks are sensitive to fine tuning of the model: choosing a $10-2$ or a $8-5$ configuration over the $8-2$ considered here, greatly improves learning. In stark contrast, {\it Swish} networks exhibit consistent performance over a wider choice of architecture/learning parameters. Although the performance impact might be fairly small for small networks, it certainly plays an important role for larger datasets, as discussed in Ref.~\cite{prajit}.
-%In Fig.~\eqref{fig:index} we show the $\alpha$ index, usually smaller for the {\it ReLU} network, and a finite value of $\gamma$ that slows down learning. We find $\gamma \simeq 0.45-0.6$ for {\it ReLU} and $\gamma=0$ for {\it Swish} and $\sigma$, both for the linear and non-linear task. 
+%In Fig.~\eqref{fig:index} we show the $\alpha$ index, usually smaller for the {\it ReLU} network, and a finite value of $\gamma$ that slows down learning. We find $\gamma \simeq 0.45-0.6$ for {\it ReLU} and $\gamma=0$ for {\it Swish} and $\sigma$, both for the linear and non-linear task.
 We have also evaluated the fraction of residuals $e^{\mu} \simeq (\hat{y}^{\mu} - y^{\mu})/m$ closer to zero and found, surprisingly, that {\it Swish} greatly outperforms the other activations in minimizing the empirical error, see Fig.~\eqref{fig:res}.
 %
 In addition, we find that the eigenvalue distribution obtained with {\it ReLU}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in Ref.~\cite{penn1, levent}. In contrast,{\it Swish} show a significantly wider spread in the eigenvalue distribution at the end of training, see sec. ~\eqref{a:loss} for details and discussions, together with results for the MNIST dataset.
