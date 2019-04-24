@@ -204,52 +204,64 @@ grant ZJURP1600103. P.E.T would like to thank M. D. Costa for help with HPC. Som
 \appendix
 \section{Cross Entropy Loss} \label{a:loss}
 %
-In this appendix we present a derivation of the cross entropy loss function using large deviation methods~\cite{mezard}. A useful starting point is the definition of the accuracy of a classification task, that is the number of times the network prediction $\hat{y}$ equals the provided solution $y$. This corresponds to the conditional probability $P(y|\hat{y}) =  \mathbb{I}(y = \hat{y})$ in Eq.~\eqref{eq:chain}.  As $\hat{y}$ is a random variable, we want to know which is the probability of obtaining the true value $y$ in a series of ``experiments'' in which $\hat{y}$  has a certain probability to be equal to $y$. According to Eq.~\eqref{eq:chain}, and using the standard definition  relating the Loss function to the log-probability $\mathscr{L} = - \log P(\mathbf{y})$, we need to evaluate
+In this appendix we present a derivation of the cross entropy loss function using large deviation methods~\cite{mezard}. In sect.~\eqref{sub:setup} we have introduced the supervised learning task in terms of the probability of the outcome $y$ given the input $x$; this can be related to the network output simply using the chain rule:
+%
+\begin{align} \nonumber
+P(\mathbf{y}) &= \int d\mathbf{x} \, P(\mathbf{y} | \mathbf{x}) \, P(\mathbf{x}) = \int d \hat{\mathbf{y}} \, P(\mathbf{y} | \hat{\mathbf{y}} ) \int d\mathbf{j}  P(\hat{\mathbf{y}}|\mathbf{j}) \\
+&\times \int d\mathbf{x} \, P(\mathbf{j} | \mathbf{x}) \, P(\mathbf{x})
+= \int d \hat{\mathbf{y}} \, P(\mathbf{y} | \hat{\mathbf{y}} ) \, P(\hat{\mathbf{y}}).
+\label{eqa:chain}
+\end{align}
+%
+The accuracy of a classification task, the number of times the network prediction $\hat{y}$ equals the provided solution $y$, corresponds to the conditional probability $P(y|\hat{y}) =  \mathbb{I}(y = \hat{y})$. As $\hat{y}$ is a random variable, we want to know which is the probability of obtaining the true value $y$ in a series of ``experiments'' in which $\hat{y}$  has a certain probability to be equal to $y$. According to Eq.~\eqref{eqa:chain}, and using the standard definition  relating the Loss function to the log-probability, we need to evaluate
 %
  \begin{align} \label{eq:cl1}
--\log P(\mathbf{y}) = - \log \int d \hat{\mathbf{y}}\, P(\mathbf{y} | \hat{\mathbf{y}}) \, P(\hat{\mathbf{y}}),
+-\log P(\mathbf{y}) = - \log \int d \hat{\mathbf{y}}\, P(\mathbf{y} | \hat{\mathbf{y}}) \, P(\hat{\mathbf{y}}).
  \end{align}
 %
-From a physics perspective, the above expression corresponds to an {\it annealed } average~\cite{parisi2, giardina} and we will discuss its meaning at the end of the calculation. For the moment, we assume that we can replace $y \to y^{\mu}$ and $\hat{y} \to \hat{y}^{\mu}$ directly in Eq.~\eqref{eq:cl1}, i.e. we fix the random variables on the observed data. Using the Dirac delta  as a representation of the Indicator function we have
+From a physics perspective, the above expression corresponds to an {\it annealed } average~\cite{parisi2, giardina} and we will discuss its meaning at the end of the calculation. For the moment, we assume that we can replace $y \to y^{\mu}$ and $\hat{y} \to \hat{y}^{\mu}$ directly in Eq.~\eqref{eq:cl1}, i.e. we fix the random variables on the observed data. Using the Dirac delta  as a representation of the Indicator function we have:
 %
- \begin{align} \label{eq:cl1}
- P(y) & =  \int  \left[ \prod_{\mu} d \hat{y}^{\mu} \right]  \,  \prod_{\mu} \delta( y^{\mu} - \hat{y}^{\mu})  \, P(\hat{y})\\ \nonumber
- &=  \int  \left[ \prod_{\mu}  \frac{d\lambda^{\mu}}{2\pi} \right] \prod_{\mu}  e^{i \, \sum_{\mu} \lambda^{\mu} \, y^{\mu} } \chi(\lambda^{\mu}).
-  \end{align}
+ \begin{equation}  \nonumber
+ P(y) =  \int  \left[ \prod_{\mu} d \hat{y}^{\mu} \right]  \,  \prod_{\mu} \delta( y^{\mu} - \hat{y}^{\mu})  \, P(\hat{y})
+\label{eqa:cl1}
+ \end{equation}
+ \begin{equation}
+ =  \int  \left[ \prod_{\mu}  \frac{d\lambda^{\mu}}{2\pi} \right] \prod_{\mu}  e^{i \, \sum_{\mu} \lambda^{\mu} \, y^{\mu} } \chi(\lambda^{\mu}),
+\end{equation}
 %
 where we have introduced $m$ Lagrange multipliers $\lambda$ to enforce the $\delta$-function constraint and identified  the characteristic function
 %
-\begin{align} \label{eq:char}
- \chi(\lambda^{\mu}) &=  \int  \left[ \prod_{\mu} d\hat{y}^{\mu} \right]  P(\hat{y}^{\mu} )  \, e^{-i \sum_{\mu} \lambda^{\mu} \, \hat{y}^{\mu}}
- \end{align}
+\begin{align} \label{eqa:char}
+\chi(\lambda^{\mu}) &=  \int  \left[ \prod_{\mu} d\hat{y}^{\mu} \right]  P(\hat{y}^{\mu} )  \, e^{-i \sum_{\mu} \lambda^{\mu} \, \hat{y}^{\mu}}
+\end{align}
 %
 Let us consider the case of i.i.d. examples, distributed according to the Bernoulli distribution:
 %
-\begin{equation} \label{eq:bern}
+\begin{equation} \label{eqa:bern}
 P(\hat{y}^{\mu} ) = \int d\boldsymbol{\theta} \left\{ q^{\mu}(\boldsymbol{\theta}) \, \delta(\hat{y}^{\mu}-1 ) + (1-q^{\mu}(\boldsymbol{\theta}) ) \, \delta(\hat{y}^{\mu}) \right\},
 \end{equation}
 %
-where each outcome is either $1$ or $0$ with a {\it sample dependent} probability $q^{\mu}(\boldsymbol{\theta})$ being the output value of a Neural Network solving a binary classification task; as such, $q$ has the functional form of a sigmoid function with $\boldsymbol{\theta}$ a set of network parameters. In this case, Eq.~\eqref{eq:char} reads
+where each outcome is either $1$ or $0$ with a {\it sample dependent} probability $q^{\mu}(\boldsymbol{\theta})$ being the output value of a Neural Network solving a binary classification task; as such, $q$ has the functional form of a sigmoid function with $\boldsymbol{\theta}$ a set of network parameters. In this case, Eq.~\eqref{eqa:char} reads
  %
-\begin{align} \label{eq:char}
+\begin{align} \label{eqa:char}
  \chi(\lambda^{\mu}) &=  \int  d\boldsymbol{\theta} \left[ q^{\mu}(\boldsymbol{\theta} ) e^{-i \, \lambda^{\mu} } +(1-q^{\mu}(\boldsymbol{\theta} )) \right].
  \end{align}
 %
-Using this expression back in Eq.~\eqref{eq:bern} we arrive at the intermediate result
+Using this expression back in Eq.~\eqref{eqa:bern} we arrive at the intermediate result
 %
- \begin{align} \label{eq:cl2}
- P(y) &= \int d\boldsymbol{\theta} \left[ \prod_{\mu}  \frac{d\lambda^{\mu}}{2\pi} \right] e^{i \, \sum_{\mu} ( \lambda^{\mu} \, y^{\mu} + \log \left[ q^{\mu} e^{-i \, \lambda^{\mu} } +(1-q^{\mu}) \right] )}  \\ \nonumber
+ \begin{align} \label{eqa:cl2} \nonumber
+ P(y) &= \int d\boldsymbol{\theta} \left[ \prod_{\mu}  \frac{d\lambda^{\mu}}{2\pi} \right] e^{i \, \sum_{\mu} ( \lambda^{\mu} \, y^{\mu} + \log \left[ q^{\mu} e^{-i \, \lambda^{\mu} } +(1-q^{\mu}) \right] )}  \\
  &=  \int  \left[ \prod_{\mu}  \frac{d\lambda^{\mu}}{2\pi} \right] e^{m \, S[\lambda]}.
  \end{align}
 %
 For a large number of training examples $m$, we can solve the above integral using the steepest descent, i.e. using a maximum likelihood approach. This fixes the value of the Lagrange multipliers:
 %
-\begin{align} \label{eq:cl3}
+\begin{align} \label{eqa:cl3}
 \frac{\partial S[\lambda]}{\partial \lambda^{\mu}} &= i \, y^{\mu} - \frac{i \, q^{\mu} \, e^{-i \, \lambda^{\mu}}}{q^{\mu} \, e^{-i \, \lambda^{\mu}} + (1-q^{\mu})} = 0 \\ \nonumber
 &\rightarrow - i \lambda^{\mu}_{c} =  \log \frac{y^{\mu}(1-q^{\mu}) }{q^{\mu}(1- y^{\mu})}
 \end{align}
 %
-Using the optima back in Eq.~\eqref{eq:cl2} we arrive after some simple algebra to the expression for the cross-entropy:
+Using the optima back in Eq.~\eqref{eqa:cl2} we arrive after some simple algebra to the expression for the cross-entropy:
 %
 \begin{align} \label{eq:cl3}
 P(y) &\simeq \int d\boldsymbol{\theta} \, e^{m S[\lambda_c, \boldsymbol{\theta}]} \\ \nonumber
