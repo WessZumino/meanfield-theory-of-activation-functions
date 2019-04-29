@@ -270,10 +270,11 @@ Further results and analysis can be found in the~\href{https://github.com/WessZu
 %
 \subsection{Hessian eigenvectors} \label{a:eigenvect}
 %
-In this section, we describe the nature of the Hessian eigenvectors
-In Fig.~\eqref{fig:eigvect}.b , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with 8-2 hidden layer units Fig. ~\eqref{fig:index} bottom left). For Relu, the loss function minimization is almost immediately reached. This is reflected in the Hessian eigenvectors that still coincide with the variables (in the Figure, the bar indicate the coefficient value of the eigenvectors). In the Sigmoid case, the Hessian eigenvectors are spread more uniformly on the variables showing a sort of graining regularization with respect to the Relu case. Nevertheless, there is still a concentration of high value coefficients in the two sub-matrices. Lastly, in the Swish case, the Hessian coefficients are spread almost uniformly over the transformation matrix. This effect is akin of a regularization effect, disfavoring large values of individual eigenvectors while preventing overfitting .
-In Fig.~\eqref{fig:eigvect2}, the same analysis is repeated for the non-linear classification case. Whereas the Relu results still shows a localization of values in the eigenvectors, Sigmoid and Swish case the Hessian eigenvectors involve a broader number of variables. Nevertheless, in the Swish case, the number of large value coefficients is still less than in the Sigmoid case.
-We argue that networks trained with {\it Swish} activations can more efficiently break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
+In this section, we describe the nature of the Hessian eigenvectors. [definisci la matrice qui con analogia fisica]. In Fig.~\eqref{fig:eigvect}.b, the Hessian eigenvectors vs the network variables $\boldsymbol{\theta}$ are plotted for Relu, Sigmoid and Swish trained networks (see the linear binary classification with 8-2 hidden layer units in Fig. ~\eqref{fig:index} bottom left). For Relu, the loss function minimization is almost immediately reached; however, this corresponds to the Hessian eigenvectors still coinciding with the initial values of the $\boldsymbol{\theta}$; in the dynamical matrix, this situation corresponds to a concentration of eigenvectors intensity along the diagonal.
+In the Sigmoid case, the Hessian eigenvectors are spread more uniformly, exploring the off-diagonal elements of the dynamical matrix and giving rise to a block form. Nevertheless, there is still a concentration of high value coefficients in the two sub-matrices. Lastly, in the Swish case, the Hessian coefficients are spread almost uniformly over the dynamical matrix. This effect is akin of a regularization effect, disfavoring large values of individual eigenvectors while preventing overfitting.
+In Fig.~\eqref{fig:eigvect2}, the same analysis is repeated for the non-linear classification case. Whereas the Relu result still shows a localization of values in the eigenvectors, for the Sigmoid and Swish case the Hessian eigenvectors involve a broader number of variables. Nevertheless, in the Swish case, the number of large value coefficients is still less than in the Sigmoid case.
+
+[This parts needs some citations] We argue that networks trained with {\it Swish} activations can more efficiently break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
 This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization).
 %
 \begin{figure*}[t!]
@@ -287,7 +288,7 @@ This is obtained by preventing large values of the individual components in the 
   \includegraphics[width= 0.7\textwidth]{eigen_nl.pdf}
   \label{fig:eigvect2}
 \end{subfigure}
-\caption{  \label{fig:eigvect} Hessian eigenvectors for the two hidden layer bwtwork trained on the linear (top) and non-linear (bottom) classification task. The bar indicates the value of the eigenvector coefficients.}
+\caption{  \label{fig:eigvect} Hessian eigenvectors for the two hidden layer network trained on the linear (top) and non-linear (bottom) classification task. The bar indicates the value of the eigenvector coefficients.}
 \end{figure*}
 
 
