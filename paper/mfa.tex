@@ -283,36 +283,36 @@ In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variab
 In Fig. ( \ref{fig:eigvect2} ), the same analysis is repeated for the non-linear two hidden 8-2 layer network. Whereas in the Relu results still show a localization of variables in the eigenvectors, in the Sigmoid and Swish case the Hessian eigenvectors involve a broader number of variables. Nevertheless, in the Swish case, the number of large value coefficients is still less than in the Sigmoid case.
 {\it Swish} training networks can break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
 This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization).
-%
-%\begin{figure*}[t!]
-%\centering
-%	\begin{subfigure}[b]{0.10}
-%	\includegraphics[width=\textwidth]{residues.pdf}
-%	\label{fig:res}
-%	\end{subfigure}
-%	~
-%	\begin{subfigure}[b]{0.10}
-%	\includegraphics[width=\textwidth]{gamma.pdf}
-%	\label{fig:gamma}
-%	\end{subfigure}
-%	 %
-%\caption{ \label{fig:res}  Fraction of zero residuals as a function of training epochs for the single 8-2 layer network with linear (top/bottom left) and non-linear (top/bottom right) decision boundary. %(right) Fraction of zero eigenvalues. (Top left/right) linear/non-linear dataset with a single, 10 units hidden layer. (Bottom left/right)  linear/non-linear dataset with two hidden layers of 8 and 2 units respectively. }
-%\end{figure*}
-%
 
-%\begin{figure*}[t!]
-%	\centering
-%		\includegraphics[width=\textwidth]{eigen_lin.pdf}
+\begin{figure*}[t!]
+\centering
+	\begin{subfigure}[b]{0.10}
+	\includegraphics[width=0.8\textwidth]{residues.pdf}
+	\label{fig:res}
+	\end{subfigure}
+	~
+	\begin{subfigure}[b]{0.10}
+	\includegraphics[width=0.\textwidth]{gamma.pdf}
+	\label{fig:gamma}
+	\end{subfigure}
+	 %
+\caption{ \label{fig:res}  Fraction of zero residuals as a function of training epochs for the single 8-2 layer network with linear (top/bottom left) and non-linear (top/bottom right) decision boundary. (right) Fraction of zero eigenvalues. (Top left/right) linear/non-linear dataset with a single, 10 units hidden layer. (Bottom left/right)  linear/non-linear dataset with two hidden layers of 8 and 2 units respectively. }
+\end{figure*}
 
-%\caption{  \label{fig:eigvect} Hessian eigenvectors (column) variables (row) for the linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
-%\end{figure*}
+8
+\begin{figure*}[t!]
+	\centering
+		\includegraphics[width=0.8\textwidth]{eigen_lin.pdf}
 
-%\begin{figure*}[t!]
-%	\centering
-%	\includegraphics[width=\textwidth]{eigen_nlin.pdf}
+\caption{  \label{fig:eigvect} Hessian eigenvectors (column) variables (row) for the linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
+\end{figure*}
 
-%	\caption{  \label{fig:eigvect2}(left) Hessian eigenvectors (column) variables (row) for the non-linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
-%\end{figure*}
+\begin{figure*}[t!]
+	\centering
+	\includegraphics[width=0.8\textwidth]{eigen_nlin.pdf}
+
+	\caption{  \label{fig:eigvect2}(left) Hessian eigenvectors (column) variables (row) for the non-linear two hidden layer of 8 and units for Relu, Sigmoid and Swish. the bar indicates the value of the eigenvector coefficients.}
+\end{figure*}
 
 
 \bibliography{mfa}
