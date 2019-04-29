@@ -30,17 +30,17 @@
 
 \icmlsetsymbol{equal}{*}
 
-\begin{icmlauthorlist}
-\icmlauthor{Mirco Milletar\'i}{mic}
-\icmlauthor{Thiparat Chotibut}{sutd}
-\icmlauthor{Paolo E. Trevisanutto}{grc}
-\end{icmlauthorlist}
+%\begin{icmlauthorlist}
+%\icmlauthor{Mirco Milletar\'i}{mic}
+%\icmlauthor{Thiparat Chotibut}{sutd}
+%\icmlauthor{Paolo E. Trevisanutto}{grc}
+%\end{icmlauthorlist}
 
-\icmlaffiliation{mic}{Microsoft, Singapore}
-\icmlaffiliation{sutd}{Singapore University of Technology and Design, Singapore.}
-\icmlaffiliation{grc}{Graphene Research Centre and CA2DM, National University of Singapore, Singapore. }
+%\icmlaffiliation{mic}{Microsoft, Singapore}
+%\icmlaffiliation{sutd}{Singapore University of Technology and Design, Singapore.}
+%\icmlaffiliation{grc}{Graphene Research Centre and CA2DM, National University of Singapore, Singapore. }
 
-\icmlcorrespondingauthor{Mirco Milletar\'i}{mirco.milletari@microsoft.com}
+%\icmlcorrespondingauthor{Mirco Milletar\'i}{mirco.milletari@microsoft.com}
 
 \vskip 0.3in
 ]
@@ -60,7 +60,7 @@ Using modern optimization and regularization techniques such as dropout~\cite{sr
 While these engineering feats improve the performance of FFN, a clear design principle is still lacking, leading to an unsystematic growth of model complexity.
 
 To assist future systematic studies and construction of FFNs, we propose a theoretical framework based on the tool-set of SM. It allows for the definition of an energy based model in which a hidden unit is regarded as a communication channel, first encoding and then {\it transmitting} the result of its computation through a gate with a specific transmission probability;  the latter is obtained via the maximum entropy principle~\cite{zecchina, jaynes} under the biologically inspired constraint that a neuron responds by firing (transmit its signals) or not with a certain probability.
-By interpreting a hidden unit as a communication channel, its activation takes the form of the expected (mean) signal transmission; remarkably, this activation corresponds to {\it Swish}, obtained in ~\cite{elfwig, prajit} through an extensive search algorithm trained with reinforcement learning and shown to best perform on the CIFAR and ImageNet datasets among all candidate activations. Although some activations may perform better for a specific datasets, they generally fail to generalize. Finally, the {\it ReLU} activation arises as a limiting, noiseless case of {\it Swish}. To the best of our knowledge, this provides the first  derivation of {\it ReLU}, typically introduced heuristically to facilitate optimization. Despite restricting our analysis to pure FFNs, most of our conclusions carry on to Convolutional and Recurrent networks. %should be "the conclusions" or "the activation function" carries on in other networks?
+By interpreting a hidden unit as a communication channel, its activation takes the form of the expected (mean) signal transmission; remarkably, this activation corresponds to {\it Swish}, obtained in ~\cite{elfwig, prajit} through an extensive search algorithm trained with reinforcement learning and shown to best perform on the CIFAR and ImageNet datasets among all candidate activations. Although some activations may perform better for a specific datasets, they generally fail to generalize. Finally, the {\it ReLU} activation arises as a limiting, noiseless case of {\it Swish}. To the best of our knowledge, this provides the first  derivation of {\it ReLU}, typically introduced heuristically to facilitate optimization. Despite restricting our analysis to pure FFNs, most of our conclusions carry on to Convolutional and Recurrent networks.
 
 \section{Motivation and Model} \label{sec:model}
 
@@ -92,14 +92,8 @@ P(\mathbf{s} | \mathbf{h}) = \frac{e^{ \sum_i \beta_i  \, s_i \, h_i }}{\prod_i 
 where $\beta_i$ encodes the noise.  In a physical system, $\beta_i$ is the inverse temperature in units of Boltzmann's constant and in equilibrium it is the same for each $s_i$; however, here the network is only in a local equilibrium as the units are not allowed to exchange ``energy'' (information) among themselves due to the lack of pairwise interactions. We have introduced $P(\mathbf{s} | \mathbf{h})$ to denote the conditional probability of $\mathbf{s}$ given the signal $\mathbf{h}$ --  and the partition function $Z$. Finally, given the distribution of the coarse grained inputs and the conditional probability of the channels $P(\mathbf{s}|\mathbf{h})$, one is left evaluating the channel transmission probability
 %
 \begin{equation} \label{eq:ps3}
-P(\mathbf{s}) = \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}}{m^{-1}\prod_{\mu,i} Z_{i, \mu}}   % \\ \nonumber
-%Z &= \frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} \left[1+ e^{\beta_i \, h^{\mu}_i} \right] %=\frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} Z_{i, \mu},
+P(\mathbf{s}) = \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}}{m^{-1}\prod_{\mu,i} Z_{i, \mu}}
 \end{equation}
-%\begin{align} \label{eq:ps3}
-%P(\mathbf{s}) &= \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{1}{Z} e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}   \\ \nonumber
-%Z &= \frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} \left[1+ e^{\beta_i \, h^{\mu}_i} \right] =\frac{1}{m} \prod_{\mu=1}^m \prod_{i=1}^{n_1} Z_{i, \mu},
-%\end{align}
-
 %
 where $\hat{h}^{\mu}_i = \sum_{j} w^{[1]}_{ij} \, x^{\mu}_j + b_i $,   $Z_{i, \mu}= 1+ e^{\beta_i \, h^{\mu}_i}$ is the partition function per example/index and we have identified the coarse grained Hamiltonian $\mathscr{H}_i = -  \, \sum_{j=1}^n \, s_i \, w^{[1]}_{ij} x^{\mu}_j -  \, s_i \, b_i$. Eq.~\eqref{eq:ps3} is the starting point of an {\it energy based model}, where it is the coarse grained probability $P(\mathbf{s})$ that propagates through the network (see e.g.~\cite{connie} ) as opposed to signals in a FFN; indeed, the $\mathscr{H}$ has the form of a RBM with binary hidden units. The expected value of the channel transmission, $\langle s_i \rangle$ is~\cite{hertz} the logistic function, for each empirical realization $\mu$ and unit $i$:
 %
@@ -107,13 +101,13 @@ where $\hat{h}^{\mu}_i = \sum_{j} w^{[1]}_{ij} \, x^{\mu}_j + b_i $,   $Z_{i, \m
 \langle s_i \rangle = {\beta_i}^{-1} \partial_{b_i} \log Z_{i, \mu} =  \sigma(\beta_i \, \hat{h}^{\mu}_i).
 \end{equation}
 %
-We stress that this is not the coarse grained input signal {\it transmitted} by the channel; it solely determines the expectation of channel transmissions {\it given} the coarsed grained input $h_i^{\mu}$. To ensure dimensional consistency across hidden layers, the output signal of each unit must have the same dimension as its input. Therefore, the correct quantity to consider is the {\it expectation value} of the output $j_i = h_i \, s_i $.  This can be  obtained by summing over all gate states, or by using the partition function of Eq.~\eqref{eq:ps3}
+This is the known mean-field solution of the Ising model; here this is exact due to the lack of lateral connections. We stress that this is not the coarse grained input signal {\it transmitted} by the channel; it solely determines the expectation of channel transmissions {\it given} the coarsed grained input $h_i^{\mu}$. To ensure dimensional consistency across hidden layers, the output signal of each unit must have the same dimension as its input. Therefore, the correct quantity to consider is the {\it expectation value} of the output $j_i = h_i \, s_i $.  This can be  obtained by summing over all gate states, or by using the partition function of Eq.~\eqref{eq:ps3}
 %
 \begin{equation} \label{eq:ps5}
 \langle j_i \rangle = \langle \hat{h}_i^{\mu} \, s_i \rangle_s = \partial_{\beta_i} \log{Z_{i,\mu}} = \hat{h}^{\mu}_i \, \sigma(\beta_i \, \hat{h}^{\mu}_i),
 \end{equation}
 %
-that agrees with the definition of the energy flux in SM~\cite{bellac}. Note that contrary to Eq.~\eqref{eq:ps4}, the noise parameters $\beta_i$ cannot be rescaled away. This function was recently obtained in ~\cite{prajit} ({\it Swish}), through an extensive search algorithm trained with reinforcement learning. In their extensive search, the authors found that activations of the form $a = x f(x)$  better performed on several benchmark datasets. A theoretical study of the performance of {\it Swish} from the point of view of information propagation has been proposed in ~\cite{soufiane}.  Our model naturally complements these studies by identifying {\it Swish} with the expectation value of the coarse grained input transmitted by each unit. In the noiseless limit, i.e. $\beta_i \to \infty $:
+that agrees with the definition of the energy flux in SM~\cite{bellac}. Note that contrary to Eq.~\eqref{eq:ps4}, the noise parameters $\beta_i$ cannot be rescaled away. This function was recently obtained in ~\cite{prajit} ({\it Swish}), through an extensive search algorithm trained with reinforcement learning. In their extensive search, the authors found that activations of the form $a = x f(x)$  better performed on several benchmark datasets. A theoretical study of the performance of {\it Swish} from the point of view of information propagation has been proposed in ~\cite{soufiane}.  Our model naturally complements these studies by identifying {\it Swish} with the expectation value of the coarse grained input transmitted by each unit. In the noiseless limit:
 %
 \begin{equation} \label{eq:ps6}
 \lim_{\beta_i \to \infty } \langle j_i \rangle =  \hat{h}^{\mu}_i \, \theta(\hat{h}^{\mu}_i)  \equiv   \rm{max} \left\{ \hat{h}^{\mu}_i, 0\right\} = ReLU(\hat{h}^{\mu}_i),
@@ -132,25 +126,25 @@ At the heart of any FFN model is the back propagation algorithm~\cite{hertz, bis
 where $\mathbf{e}^{\mu}\propto y^{\mu} - \hat{y}^{\mu}$ is the residual error (R.E.) and $\hat{\mathbf{g}}(\mathbf{h}^{\mu}_l) =  \boldsymbol{\sigma}(\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)[ 1 + \hat{\mathbf{h}}^{\mu}_l \boldsymbol{\beta}_l \, \boldsymbol{\sigma}(-\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l) ] $. In the optimization phase we look for stationary points defined by $\partial \mathscr{L}/\partial \boldsymbol{\theta}^{\alpha}_l=0$, where $\boldsymbol{\theta}^{\alpha}_l = \left\{ \mathbf{w}_l, \mathbf{b}_l, \boldsymbol{\beta}_l \right\} $. For a linear network, this condition is  strictly satisfied if $ \mathbf{e}^{\mu}=0$. However, in a non linear network we can also have $g(\hat{\mathbf{h}}^{\mu})=0$. In principle, there may be situations in which $\mathbf{e}^{\mu}$ is far from zero but $g(\hat{\mathbf{h}}^{\mu}) \simeq 0$, in which case learning will not be effective. For a $\sigma$ activation, $\mathbf{g}(\hat{\mathbf{h}}^{\mu}_l) = \boldsymbol{\sigma}(\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)\boldsymbol{\sigma}(-\boldsymbol{\beta}_l \, \hat{\mathbf{h}}^{\mu}_l)$ \footnote{in physics,the phase space factor~\cite{roberto}}.%, describing the transition probability from an occupied to an empty state
 ~\cite{tishby1, tishby2} show that there are two distinct phases of learning: empirical error minimization (the residual) and representation learning. We can identify the latter with the task of optimizing $g(\hat{\mathbf{h}}^{\mu})$. When $\hat{h}_i \gg 1/\beta_i$, i.e. when the signal greatly exceeds the noise, then $\sigma( \beta_i \,\hat{ h}_i) \equiv P(s_i=1| \bar{x}_i)  \simeq 1$ ($\bar{x}_i$ is the unit's input) and the back propagated signal is small, being proportional to $g(\hat{h} ) \simeq 0$. We then have the paradoxical situation in which, although the lower dimensional representation of the information is considered to be relevant, learning is likely to be inefficient.
 
-Consider now the same limiting behavior for {\it Swish}. If $\hat{h}_i \gg 1/\beta_i$, $g(\hat{h}^{\mu}_i)\simeq 1$, i.e. the representation learning phase is completed and learning moves towards minimising the empirical error. In the opposite limit, the signal is much smaller than the noise and learning is impossible. Finally, in the noiseless case, one obtains the {\it ReLU} solution $g(\hat{h}^{\mu}_i) = (1, 0) $, for $\hat{h}_i $ respectively greater or smaller than zero. This corresponds to a network in which representation unlearning is impossible. The fact that {\it Swish} can be negative for $\sigma(\hat{h})/\beta <\hat{h}<0$ allows to avoid plateaus surrounding local minima and saddle-points. In Ref.~\cite{dauphin}, it was proposed that loss plateaus of zero (or small) curvatures are responsible for preventing convergence of gradient descent.
+Consider now the same limiting behavior for {\it Swish}. If $\hat{h}_i \gg 1/\beta_i$, $g(\hat{h}^{\mu}_i)\simeq 1$, i.e. the representation learning phase is completed and learning moves towards minimising the empirical error. In the opposite limit, the signal is much smaller than the noise and learning is impossible. Finally, in the noiseless case, one obtains the {\it ReLU} solution $g(\hat{h}^{\mu}_i) = (1, 0) $, for $\hat{h}_i $ respectively greater or smaller than zero. This corresponds to a network in which representation unlearning is impossible. The fact that {\it Swish} can be negative for $\sigma(\hat{h})/\beta <\hat{h}<0$ allows to avoid plateaus surrounding local minima and saddle-points. In~\cite{dauphin}, it was proposed that loss plateaus of zero (or small) curvatures are responsible for preventing convergence of gradient descent.
  %
 \section{Numerical Analysis}\label{sec:numerical}
 %
-A thorough performance comparison of {\it Swish} versus other activations was presented in ~\cite{prajit}, where it was shown that {\it Swish} outperformed all other choices on image classification tasks. Hereafter,  we considered both artificial and experimental datasets. Given that both datasets lead to the same qualitative features, here we discuss the former and come back to the latter in. [{\color{red}missing}]. We considered two binary classification tasks: a linear and a non-linear one, each trained with one and two hidden layers. For the linear task with a single, 10 units layer, all three activations attain full train/test accuracy but {\it Swish} is the fastest converging.  For the non-linear task, {\it ReLU} quickly converges to a suboptimal plateau. To obtain a better understanding, we have evaluated two different indices: the fraction of negative eigenvalues of the Hessian --$\alpha$-- and the fraction of zero eigenvalues -- $\gamma$ --. The former measures the ratio of descent to ascent directions on the energy landscape; when $\alpha$ is large, gradient descent can quickly escape a critical point due to the existence of multiple unstable directions. However, when a critical point exhibits multiple near-zero eigenvalues, roughly captured by $\gamma$, gradient descent will slowly decrease the training loss.
-In general, we find that for {\it ReLU} networks $\gamma \neq 0$, while this is typically not the case for both {\it Swish} and sigmoid-networks. Taking the two layer case as a representative example, we show that {\it ReLU} networks are sensitive to fine tuning of the model: choosing a $10-2$ or a $8-5$ configuration over the $8-2$ considered here, greatly improves learning. In stark contrast, {\it Swish} networks exhibit consistent performance over a wider choice of architecture/learning parameters. Although the performance impact might be fairly small for small networks, it certainly plays an important role for larger ones, as discussed in ~\cite{prajit}. Looking at the fraction of residuals $e^{\mu} \simeq (\hat{y}^{\mu} - y^{\mu})/m$ closer to zero we found, surprisingly, that {\it Swish} greatly outperforms the other activations in minimizing the empirical error, see A.c. [{\color{red} or A.b?}]
+A thorough performance comparison of {\it Swish} versus other activations was presented in ~\cite{prajit}, where it was shown that {\it Swish} outperformed all other choices on image classification tasks. Hereafter,  we considered both artificial and experimental datasets. Given that both datasets lead to the same qualitative features, here we discuss the former and come back to the latter in~\eqref{a:numerical}. We considered two binary classification tasks: a linear and a non-linear one, each trained with one and two hidden layers. For the linear task with a single, 10 units layer, all three activations attain full train/test accuracy but {\it Swish} is the fastest converging.  For the non-linear task, {\it ReLU} quickly converges to a suboptimal plateau. To obtain a better understanding, we have evaluated two different indices: the fraction of negative eigenvalues of the Hessian --$\alpha$-- and the fraction of zero eigenvalues -- $\gamma$ --. The former measures the ratio of descent to ascent directions on the energy landscape; when $\alpha$ is large, gradient descent can quickly escape a critical point due to the existence of multiple unstable directions. However, when a critical point exhibits multiple near-zero eigenvalues, roughly captured by $\gamma$, gradient descent will slowly decrease the training loss.
+In general, we find that for {\it ReLU} networks $\gamma \neq 0$, while this is typically not the case for both {\it Swish} and sigmoid-networks. Taking the two layer case as a representative example, we show that {\it ReLU} networks are sensitive to fine tuning of the model: choosing a $10-2$ or a $8-5$ configuration over the $8-2$ considered here, greatly improves learning. In stark contrast, {\it Swish} networks exhibit consistent performance over a wider choice of architecture/learning parameters. Although the performance impact might be fairly small for small networks, it certainly plays an important role for larger ones, as discussed in~\cite{prajit}. Looking at the fraction of residuals $e^{\mu} \simeq (\hat{y}^{\mu} - y^{\mu})/m$ closer to zero we found, surprisingly, that {\it Swish} greatly outperforms the other activations in minimizing the empirical error, see~\eqref{a:numerical}.
 %
-In addition, we find that the eigenvalue distribution obtained with {\it ReLU}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in ~\cite{penn1, levent}. In contrast, {\it Swish} show a significantly wider spread in the eigenvalue distribution at the end of training, see sec. ~\eqref{a:loss}.
+In addition, we find that the eigenvalue distribution obtained with {\it ReLU}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in ~\cite{penn1, levent}. In contrast, {\it Swish} shows a significantly wider spread in the eigenvalue distribution at the end of training, see sec.~\eqref{a:numerical}.
 
 
 \section{Conclusion and perspectives}
 %
 In this work, we have introduced an energy-based framework that allows systematic construction of FFNs by providing a coherent interpretation of the computational process of each and every hidden unit. The framework overcomes the dimensional mismatch stemming from the use of heuristic activations. Enforcing dimensional consistency naturally leads to activations propagating the expectation value of the processed signals, providing a theoretical justification of the \textit{Swish} activation found in ~\cite{prajit}. We also demonstrate the superiority of {\it Swish} through numerical experiments that reveal the geometry of its loss manifold that facilitates gradient descent optimization. We hope SM methods can complement standard views of FFNs, e.g. help explore the scaling relation between the {\it Swish} Hessian's eigenvalue distributions and the hyperparameters, similar to the analysis of ~\cite{penn1} for standard activations.
 
-\section{Acknowledgements}
+%\section{Acknowledgements}
 
-M.M. would like to thank Ned Phillips, Bill Phillips, Sarah Chan and Roberto Raimondi for support and discussions. A special thanks to  F\'abio Hip\'olito and Aki Ranin for carefully reading and commenting the manuscript. T.C. would like thank Shaowei Lin for useful discussions and for financial support from the startup research grant
-SRES15111, and the SUTD-ZJU collaboration research\\
-grant ZJURP1600103. P.E.T would like to thank M. D. Costa for help with HPC. Some of the calculations were carried out at the HPC facilities of the NUS Centre for Advanced 2D materials. Finally, M.M. And T.C. would like to thank the AI Saturday meetup initiative organised by Nurture.ai, that sparked some of the ideas presented in this work.
+%M.M. would like to thank Ned Phillips, Bill Phillips, Sarah Chan and Roberto Raimondi for support and discussions. A special thanks to  F\'abio Hip\'olito and Aki Ranin for carefully reading and commenting the manuscript. T.C. would like thank Shaowei Lin for useful discussions and for financial support from the startup research grant
+%SRES15111, and the SUTD-ZJU collaboration research\\
+%grant ZJURP1600103. P.E.T would like to thank M. D. Costa for help with HPC. Some of the calculations were carried out at the HPC facilities of the NUS Centre for Advanced 2D materials. Finally, M.M. And T.C. would like to thank the AI Saturday meetup initiative organised by Nurture.ai, that sparked some of the ideas presented in this work.
 
 \appendix
 \section{Cross Entropy Loss} \label{a:loss}
@@ -255,9 +249,16 @@ Previously, we noticed that from a statistical mechanics point of view we are ev
 %
 \begin{figure*}[t!]
 \centering
-	\includegraphics[width= 0.6\textwidth]{mnist.pdf}
-  %
-\caption{ \label{fig:mnist} Single hidden layer network (25 units) trained on the MNIST dataset. (top left) Loss functions, (top right) $\alpha$ index, (bottom left) Fraction of zero eigenvalues $\gamma$ and (bottom right) fraction of zero residuals.}
+\begin{subfigure}[]{}
+\includegraphics[width= 0.48\textwidth]{mnist.pdf}
+\label{fig:mnist}
+\end{subfigure}
+%
+\begin{subfigure}[]{}
+\includegraphics[width= 0.5\textwidth]{eigens_MNIST.pdf}
+\end{subfigure}
+%
+\caption{ \label{fig:mnist} Single hidden layer network (25 units) trained on the MNIST dataset. (top left) Loss functions, (top right) $\alpha$ index, (bottom left) Fraction of zero eigenvalues $\gamma$ and (bottom right) fraction of zero residuals. (b) eigenvalue distribution at the end of training}
 \end{figure*}
 %
 In section~\eqref{sec:numerical} we have qualitatively described the behaviour of the two indices $\alpha$ and $\gamma$ on two classification tasks, a linear and a non-linear one. Here we report the results of this analysis more in details while dataset and code are available as a~\href{https://github.com/WessZumino/meanfield-theory-of-activation-functions}{git repository}.
@@ -265,13 +266,13 @@ In section~\eqref{sec:numerical} we have qualitatively described the behaviour o
 The results of figure~\eqref{fig:index} have been obtained using Adam for batch training in order to distinguish the effect of noise introduced by Swish from the one due to random minibatches. Also notice that the two dataset are fairly small: the linearly separable one contains $51$ examples while the non-linear has $863$.
 
 To make sure that the observed offects are not restricted to small datasets, we have performed the same analysis on the MNIST dataset, comprising $1797$ examples and obtained a qualitatively similar result.
-In Fig.~ we can see that although Further results and analysis can be found in the~\href{https://github.com/WessZumino/meanfield-theory-of-activation-functions}{git repository}. In the next section, we complete this numerical study with an analysis of the Hessian eigenvectors.
+Further results and analysis can be found in the~\href{https://github.com/WessZumino/meanfield-theory-of-activation-functions}{git repository}, together with a visualization of the eigenvaule evolution during training. In the next section, we complete this numerical study with an analysis of the Hessian eigenvectors.
 %
 \subsection{Hessian eigenvectors} \label{a:eigenvect}
 %
 In this section, we describe the nature of the Hessian eigenvectors
-In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with 8-2 hidden layer units Fig. ~\eqref{fig:index} bottom left). For Relu, the loss function minimization is almost immediately reached. This is reflected in the Hessian eigenvectors that still coincide with the variables (in the Figure, the bar indicate the coefficient value of the eigenvectors). In the Sigmoid case, the Hessian eigenvectors are spread more uniformly on the variables showing a sort of graining regularization with respect to the Relu case. Nevertheless, there is still a concentration of high value coefficients in the two sub-matrices. Lastly, in the Swish case, the Hessian coefficients are spread almost uniformly over the transformation matrix. This effect is akin of a regularization effect, disfavoring large values of individual eigenvectors while preventing overfitting .
-In Fig. ( \ref{fig:eigvect2} ), the same analysis is repeated for the non-linear classification case. Whereas the Relu results still shows a localization of values in the eigenvectors, Sigmoid and Swish case the Hessian eigenvectors involve a broader number of variables. Nevertheless, in the Swish case, the number of large value coefficients is still less than in the Sigmoid case.
+In Fig.~\eqref{fig:eigvect}.b , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with 8-2 hidden layer units Fig. ~\eqref{fig:index} bottom left). For Relu, the loss function minimization is almost immediately reached. This is reflected in the Hessian eigenvectors that still coincide with the variables (in the Figure, the bar indicate the coefficient value of the eigenvectors). In the Sigmoid case, the Hessian eigenvectors are spread more uniformly on the variables showing a sort of graining regularization with respect to the Relu case. Nevertheless, there is still a concentration of high value coefficients in the two sub-matrices. Lastly, in the Swish case, the Hessian coefficients are spread almost uniformly over the transformation matrix. This effect is akin of a regularization effect, disfavoring large values of individual eigenvectors while preventing overfitting .
+In Fig.~\eqref{fig:eigvect2}, the same analysis is repeated for the non-linear classification case. Whereas the Relu results still shows a localization of values in the eigenvectors, Sigmoid and Swish case the Hessian eigenvectors involve a broader number of variables. Nevertheless, in the Swish case, the number of large value coefficients is still less than in the Sigmoid case.
 We argue that networks trained with {\it Swish} activations can more efficiently break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
 This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of Relu, Sigmoid and Swish networks (see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization).
 %
@@ -279,14 +280,14 @@ This is obtained by preventing large values of the individual components in the 
 \centering
 \begin{subfigure}[]{}
   \includegraphics[width= 0.7\textwidth]{eigen_lin.pdf}
-  \label{fig:eigvect}
+  \label{fig:eigvect1}
 \end{subfigure}
 ~
 \begin{subfigure}[]{}
   \includegraphics[width= 0.7\textwidth]{eigen_nl.pdf}
   \label{fig:eigvect2}
 \end{subfigure}
-\caption{  Hessian eigenvectors for the two hidden layer bwtwork trained on the linear (top) and non-linear (bottom) classification task. The bar indicates the value of the eigenvector coefficients.}
+\caption{  \label{fig:eigvect} Hessian eigenvectors for the two hidden layer bwtwork trained on the linear (top) and non-linear (bottom) classification task. The bar indicates the value of the eigenvector coefficients.}
 \end{figure*}
 
 
