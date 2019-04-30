@@ -83,7 +83,7 @@ P(\mathbf{h}) &= \int {d\mathbf{x}} \, \Gamma^{[1]} \, \delta\left( \mathbf{h} -
 \Gamma^{[1]} &= \prod_{j=1}^n \delta\left( \sum_{i=1}^{n_1} w_{ij}^{[1]} -1 \right).
 \end{align}
 %
-Eq.~\eqref{eq:ps2} is akin to the real space block-spin renormalization developed by Kadanoff, reformulated in the more general language of probability theory~\cite{roberto, ma, cassandro} or it can be seen as a functional ``change of variables''. The relation between  DL and the renormalization group was previously observed in the context of restricted Boltzmann machine (RBM)~\cite{mehta}; we discuss how this generalizes to FFN via Eq.~\eqref{eq:ps2}. Once $\mathbf{h}$ has been computed, the information passes through the ``synaptic'' gate, and transmitted with a certain probability if it exceeds the threshold potential $b_i$. The core task at hand is to determine the state of the gate (open/close). The absence of lateral connections in FFNs means that each synaptic gate is only influenced by its receptive signal as the intralayer correlations are taken -- a priori-- to be zero. Given a statistical ensemble of hidden binary gates, the least unbiased distribution  can be obtained by maximizing its entropy, subject to constraints imposed by the conserved quantities, i.e. the first and second moments of the data~\cite{zecchina, mckay}. However, in the absence of lateral connections, the entropy functional of the hidden gate $s_i$ does not account for the second moment.
+Eq.~\eqref{eq:ps2} is akin to the real space block-spin renormalization developed by Kadanoff, reformulated in the more general language of probability theory~\cite{roberto, ma, cassandro} or it can be seen as a functional ``change of variables'', with $\mathbf{h}$ a cavity field. The relation between DL and the renormalization group was previously observed in the context of restricted Boltzmann machine (RBM)~\cite{mehta}. Once $\mathbf{h}$ has been computed, the information passes through the ``synaptic'' gate, and transmitted with a certain probability if it exceeds the threshold potential $b_i$. The core task at hand is to determine the state of the gate (open/close). The absence of lateral connections in FFNs means that each synaptic gate is only influenced by its receptive signal as the intralayer correlations are taken -- a priori-- to be zero. Given a statistical ensemble of hidden binary gates, the least unbiased distribution  can be obtained by maximizing its entropy, subject to constraints imposed by the conserved quantities, i.e. the first and second moments of the data~\cite{zecchina, mckay}. However, in the absence of lateral connections, the entropy functional of the hidden gate $s_i$ does not account for the second moment.
 %
 Functionally varying with respect to $P(\mathbf{s)}$ and solving for the Lagrange multipliers, one  obtains~\cite{roberto}:
 %
@@ -151,7 +151,9 @@ In this work, we have introduced an energy-based framework that allows systemati
 \appendix
 \section{Cross Entropy Loss} \label{a:loss}
 %
-In this appendix we present a derivation of the cross entropy loss function using large deviation methods~\cite{mezard}. In sect.~\eqref{sub:setup} we have introduced the supervised learning task in terms of the probability of the outcome $y$ given the input $x$; this can be related to the network output by means of the chain rule:
+In this appendix we present a derivation of the cross entropy loss function using large deviation methods and mean field theory~\cite{mezard}. Other loss functions can be obtained following the same method while changing some of the statistical assumptions on the label correlations.
+
+In sect.~\eqref{sub:setup} we have introduced the supervised learning task in terms of the probability of the outcome $y$ given the input $x$; this can be related to the network output by means of the chain rule:
 %
 \begin{align} \nonumber
 P(\mathbf{y}) &= \int d\mathbf{x} \, P(\mathbf{y} | \mathbf{x}) \, P(\mathbf{x}) = \int d \hat{\mathbf{y}} \, P(\mathbf{y} | \hat{\mathbf{y}} ) \int d\mathbf{j}  P(\hat{\mathbf{y}}|\mathbf{j}) \\
@@ -241,13 +243,13 @@ S[\boldsymbol{\theta}] &= \frac{1}{m} \sum_{\mu} \left\{ y^{\mu} \, \log [ q^{\m
 	\caption{ \label{fig:index} (a) Loss functions for linear (left) and non-linear (right) binary classification. (Top) 10 units hidden layer (Bottom) two hidden layer of 8 and 2 units respectively. All cases have a {\it Sigmoid} activation in the last layer and a learning rate of 0.01. (b) $\alpha$ index  v.s. energy for the single layer network with linear (left) and non-linear (right) decision boundary. (c)  Fraction of zero residuals as a function of training epochs for the single 8-2 layer network with linear (top/bottom left) and non-linear (top/bottom right) decision boundary. (d) Fraction of zero eigenvalues. (Top left/right) linear/non-linear dataset with a single, 10 units hidden layer. (Bottom left/right)  linear/non-linear dataset with two hidden layers of 8 and 2 units respectively. Curves are evaluated with the same number of epochs within a single batch training. }
 \end{figure*}
 %
-up to an additive constant depending only on $y$. The final step consists in evaluating the $\theta$ integral again for $m \gg 1$, and take the maximum likelihood value $\theta^*$. This last step is numerically performed by the gradient descent algorithm. Note however that the evaluation of the cost function in the optima negelects ``finite size'' correcions, and it becomes more and more correct as the number of examples $m$ increases. In this derivation we assumed that the two outcomes of the network are not correlated, but one can relax this assumption and obtain a new Loss function that takes into account possible correlations among the labels. The latter case corresponds to multi-label classification where, controrary to multi-class classification, labels are mutually correlated.
+up to an additive constant depending only on $y$. The final step consists of evaluating the $\theta$ integral again for $m \gg 1$, and take the maximum likelihood value $\theta^*$. This last step is numerically performed by the gradient descent algorithm. Note however that the evaluation of the cost function in the optima negelects ``finite size'' correcions, and it becomes more and more correct as the number of examples $m$ increases. In this derivation we assumed that the two outcomes of the network are not correlated, but one can relax this assumption and obtain a new Loss function that takes into account possible correlations among the labels. The latter case corresponds to multi-label classification where, controrary to multi-class classification, labels are mutually correlated.
 
 Previously, we noticed that from a statistical mechanics point of view we are evaluating an {\it annealed} average; however, as the input variables are fixed this should rather be a {\it quenched} average. This is the case of spin glasses~\cite{parisi2, giardina}, where the quenched disorder (a fixed value of the couplings between spins) leads to frustration and therefore a highly non-convex energy landscape. Interestingly, a quenched scenario is similar to the approach proposed in~\cite{pratik}, leading to an improved optimization protocol. We leave this point as an open question for future research.
 
-\section{Numerical Analysis}
+\section{Numerical Analysis} \label{a:numerical}
 
-\subsection{Index of critical points} \label{a:numerical}
+%\subsection{Index of critical points} 
 %
 \begin{figure*}[t!]
 \centering
@@ -268,31 +270,32 @@ In section~\eqref{sec:numerical} we have qualitatively described the behaviour o
 The results of figure~\eqref{fig:index} have been obtained using Adam for batch training in order to distinguish the effect of noise introduced by {\it Swish} from the one due to random minibatches. Also notice that the two dataset are fairly small: the linearly separable one contains $51$ examples while the non-linear one has $863$ examples.
 
 To verify that the observed effects are not specific to small datasets, we have performed the same analysis on the MNIST dataset, comprising $1797$ examples and obtained a qualitatively similar result.
-Further results and analysis, together with a visualization of the time evolution of eigenvalue distribution during training, can be found in the~\href{https://github.com/WessZumino/meanfield-theory-of-activation-functions}{git repository}. In the next section, we complete this numerical study with an analysis of the Hessian eigenvectors.
-%
-\subsection{Hessian eigenvectors} \label{a:eigenvect}
-%
-In this section, we describe the nature of the Hessian eigenvectors. {\color{red}[definisci la matrice qui con analogia fisica]}. In Fig.~\eqref{fig:eigvect}.b, the Hessian eigenvectors vs the network variables [{\color{red} this should be variables' "indices", not the variables themselves}] $\boldsymbol{\theta}$ are plotted for {\it ReLu}, {\it Sigmoid} and {\it Swish} trained networks {\color{red}(see the linear binary classification with 8-2 hidden layer units in Fig. ~\eqref{fig:index} bottom left).} For {\it ReLu}, the loss function minimization is almost immediately reached; however, this corresponds to the Hessian eigenvectors still coinciding with the initial values of the $\boldsymbol{\theta}$; in the dynamical matrix [{\color{red} is "dynamical matrix"  a common terminology? have we introduced this before?}], this situation corresponds to a concentration of eigenvectors intensity along the diagonal. [{\color{red} how about "this situation corresponds to localization of eigenvectors' amplitudes along the diagonal"?}]
-In the {\it Sigmoid} case, the Hessian eigenvectors spread more uniformly, exploring the off-diagonal elements of the dynamical matrix and giving rise to a block form [{\color{red} this is not a block diagonal form right? if so, saying "block form" can be confusing}] . Nevertheless, there is still a concentration of high-valued coefficients in the two sub-matrices [{\color{red} what are the two sub-matrices?}]. Lastly, in the {\it Swish} case, the Hessian [{\color{red} eigenvectors'}] coefficients spread almost uniformly over the dynamical matrix. This effect is akin to a regularization effect, disfavoring large values of individual eigenvectors while preventing overfitting.
-In Fig.~\eqref{fig:eigvect2}, the same analysis is repeated for the non-linear classification task. Whereas the {\it ReLu} result still exhibits a localization of  the eigenvectors' [{\color{red}amplitudes}], the Hessian eigenvectors of {\it Sigmoid} and {\it Swish} {\color{red}are more extended, spreading over a larger number of variables' indices.} Nevertheless, in the {\it Swish} case, the number of large-valued coefficients is still less than that in the {\it Sigmoid} case.
+Further results and analysis, together with a visualization of the time evolution of eigenvalue distribution during training, can be found in the~\href{https://github.com/WessZumino/meanfield-theory-of-activation-functions}{git repository}.
 
-{\color{red}[This parts needs some citations]} We argue that networks trained with {\it Swish} activations can more efficiently break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
-This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of {\it ReLu}, {\it Sigmoid} and {\it Swish} networks {\color{red}(see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization).}
+%In the next section, we complete this numerical study with an analysis of the Hessian eigenvectors.
 %
-\begin{figure*}[t!]
-\centering
-\begin{subfigure}[]{}
-  \includegraphics[width= 0.7\textwidth]{eigen_lin.pdf}
-  \label{fig:eigvect1}
-\end{subfigure}
-~
-\begin{subfigure}[]{}
-  \includegraphics[width= 0.7\textwidth]{eigen_nl.pdf}
-  \label{fig:eigvect2}
-\end{subfigure}
-\caption{  \label{fig:eigvect} Hessian eigenvectors for the two hidden layer network trained on the linear (top) and non-linear (bottom) classification task. The bar indicates the value of the eigenvector coefficients.}
-\end{figure*}
+%\subsection{Hessian eigenvectors} \label{a:eigenvect}
+%
+%In this section, we describe the nature of the Hessian eigenvectors. {\color{red}[definisci la matrice qui con analogia fisica]}. In Fig.~\eqref{fig:eigvect}.b, the Hessian eigenvectors vs the network variables [{\color{red} this should be variables' "indices", not the variables themselves}] $\boldsymbol{\theta}$ are plotted for {\it ReLu}, {\it Sigmoid} and {\it Swish} trained networks {\color{red}(see the linear binary classification with 8-2 hidden layer units in Fig. ~\eqref{fig:index} bottom left).} For {\it ReLu}, the loss function minimization is almost immediately reached; however, this corresponds to the Hessian eigenvectors still coinciding with the initial values of the $\boldsymbol{\theta}$; in the dynamical matrix [{\color{red} is "dynamical matrix"  a common terminology? have we introduced this before?}], this situation corresponds to a concentration of eigenvectors intensity along the diagonal. [{\color{red} how about "this situation corresponds to localization of eigenvectors' amplitudes along the diagonal"?}]
+%In the {\it Sigmoid} case, the Hessian eigenvectors spread more uniformly, exploring the off-diagonal elements of the dynamical matrix and giving rise to a block form [{\color{red} this is not a block diagonal form right? if so, saying "block form" can be confusing}] . Nevertheless, there is still a concentration of high-valued coefficients in the two sub-matrices [{\color{red} what are the two sub-matrices?}]. Lastly, in the {\it Swish} case, the Hessian [{\color{red} eigenvectors'}] coefficients spread almost uniformly over the dynamical matrix. This effect is akin to a regularization effect, disfavoring large values of individual eigenvectors while preventing overfitting.
+%In Fig.~\eqref{fig:eigvect2}, the same analysis is repeated for the non-linear classification task. Whereas the {\it ReLu} result still exhibits a localization of  the eigenvectors' [{\color{red}amplitudes}], the Hessian eigenvectors of {\it Sigmoid} and {\it Swish} {\color{red}are more extended, spreading over a larger number of variables' indices.} Nevertheless, in the {\it Swish} case, the number of large-valued coefficients is still less than that in the {\it Sigmoid} case.
 
+%{\color{red}[This parts needs some citations]} We argue that networks trained with {\it Swish} activations can more efficiently break the symmetries of the loss function and reach extremal points that have higher number of zero residuals (in Physical terms, lower energy minima).
+%This is obtained by preventing large values of the individual components in the Hessian eigenvectors-variables transformation matrices at the minima. In Fig.( \ref{fig:eigvect} ) , the Hessian eigenvectors vs the individual variables are plotted in the case of {\it ReLu}, {\it Sigmoid} and {\it Swish} networks {\color{red}(see the linear binary classification with two 8-2 hidden layer of 8 and 2 units Fig. ~\eqref{fig:index} bottom left loss function minimization).}
+%
+%\begin{figure*}[t!]
+%\centering
+%\begin{subfigure}[]{}
+%  \includegraphics[width= 0.7\textwidth]{eigen_lin.pdf}
+%  \label{fig:eigvect1}
+%\end{subfigure}
+%~
+%\begin{subfigure}[]{}
+%  \includegraphics[width= 0.7\textwidth]{eigen_nl.pdf}
+%  \label{fig:eigvect2}
+%\end{subfigure}
+%\caption{  \label{fig:eigvect} Hessian eigenvectors for the two hidden layer network trained on the linear (top) and non-linear (bottom) classification task. The bar indicates the value of the eigenvector coefficients.}
+%\end{figure*}
 
 \bibliography{mfa}
 \bibliographystyle{icml2019}
