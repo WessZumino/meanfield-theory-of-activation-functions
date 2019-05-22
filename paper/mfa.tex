@@ -30,20 +30,26 @@
 
 \icmlsetsymbol{equal}{*}
 
-%\begin{icmlauthorlist}
-%\icmlauthor{Mirco Milletar\'i}{mic}
-%\icmlauthor{Thiparat Chotibut}{sutd}
-%\icmlauthor{Paolo E. Trevisanutto}{grc}
-%\end{icmlauthorlist}
+\begin{icmlauthorlist}
+\icmlauthor{Mirco Milletar\'i}{mic}
+\icmlauthor{Thiparat Chotibut}{sutd}
+\icmlauthor{Paolo E. Trevisanutto}{grc}
+\end{icmlauthorlist}
 
-%\icmlaffiliation{mic}{Microsoft, Singapore}
-%\icmlaffiliation{sutd}{Singapore University of Technology and Design, Singapore.}
-%\icmlaffiliation{grc}{Graphene Research Centre and CA2DM, National University of Singapore, Singapore. }
+\icmlaffiliation{mic}{Microsoft, Singapore}
+\icmlaffiliation{sutd}{Singapore University of Technology and Design, Singapore.}
+\icmlaffiliation{grc}{Graphene Research Centre and CA2DM, National University of Singapore, Singapore. }
 
-%\icmlcorrespondingauthor{Mirco Milletar\'i}{mirco.milletari@microsoft.com}
+\icmlcorrespondingauthor{Mirco Milletar\'i}{milletari@gmail.com}
+\icmlcorrespondingauthor{Thiparat Chotibut}{thiparatc@gmail.com}
+
+\icmlkeywords{Machine Learning, ICML}
+
 
 \vskip 0.3in
 ]
+
+\printAffiliationsAndNotice{} % otherwise use the standard text.
 
 \begin{abstract}
 We present a Statistical Mechanics (SM) model of deep neural networks, connecting the energy-based and the feed forward networks (FFN) approach.
@@ -56,7 +62,7 @@ We study the  spectrum of the Hessian on an associated classification task, show
 \section{Introduction}
 
 Advances in modern computing hardware and availability of massive datasets have empowered multilayer artificial neural networks, or deep learning (DL), with unprecedented capabilities for image and speech recognition tasks. Despite these empirical success, theoretical understanding of why and when multilayer neural networks perform well lags far behind~\cite{mezard1}.
-Only recently, theoretical efforts in this direction have been intensively reported. For example, recent works shed light on how FFN attains its expressive power~\cite{Poggio2017, LinTegmark2017, Raghu2017, Poole2016}, what contributes to its generalizability~\cite{Zhang2017,Dinh2017}, and how myriad parameters in the network affect the geometry of the loss function ~\cite{dauphin, ch, penn1, penn2}. Taken together, these theoretical results have paved the way for a systematic design of robust and explainable FFNs.
+Only recently, theoretical efforts in this direction have been intensively reported. For example, recent works shed light on how FFN attains its expressive power~\cite{Poggio2017, LinTegmark2017, Raghu2017, Poole2016}, what contributes to its generalizability~\cite{Zhang2017,Dinh2017}, and how myriad parameters in the network affect the geometry of the loss function ~\cite{dauphin, ch, penn1, penn2}. Taken together, these results have paved the way for a systematic design of robust and explainable FFNs.
 
 Using modern optimization and regularization techniques such as dropout~\cite{srivastava2014}, non-linear activation functions, and complex network architectures~\cite{Krizhevsky}, to name a few, the FFN can be efficiently trained on large-scale datasets such as ImageNet or CIFAR to achieve low training and generalization errors.
 While these engineering feats improve the performance of FFN, a clear design principle is still lacking, leading to an unsystematic growth of model complexity.
@@ -83,7 +89,7 @@ P(\mathbf{h}) &= \int {d\mathbf{x}} \, \Gamma^{[1]} \, \delta\left( \mathbf{h} -
 \Gamma^{[1]} &= \prod_{j=1}^n \delta\left( \sum_{i=1}^{n_1} w_{ij}^{[1]} -1 \right).
 \end{align}
 %
-Eq.~\eqref{eq:ps2} is akin to the real space block-spin renormalization developed by Kadanoff, reformulated in the more general language of probability theory~\cite{roberto, ma, cassandro}, albeit without proper rescaling. Alternatively, Eq.~\eqref{eq:ps2} can be seen as a functional ``change of variables'', with $\mathbf{h}$ a cavity field. The relation between DL and the renormalization group was previously observed in the context of restricted Boltzmann machine (RBM)~\cite{mehta}. Once $\mathbf{h}$ has been computed, the information passes through the ``synaptic'' gate, and transmitted with a certain probability if it exceeds the threshold potential $b_i$. The core task at hand is to determine the state of the gate (open/close). The absence of lateral connections in FFNs means that each synaptic gate is only influenced by its receptive signal as the intralayer correlations are taken -- a priori-- to be zero. Given a statistical ensemble of hidden binary gates, the least unbiased distribution  can be obtained by maximizing its entropy, subject to constraints imposed by the conserved quantities, i.e. the first and second moments of the data~\cite{zecchina, mckay}. However, in the absence of lateral connections, the entropy functional of the hidden gate $s_i$ does not account for the second moment.
+Eq.~\eqref{eq:ps2} is akin to the real space block-spin renormalization developed by Kadanoff, reformulated in the more general language of probability theory~\cite{roberto, ma, cassandro}, albeit without proper rescaling. Alternatively, Eq.~\eqref{eq:ps2} can be seen as a functional ``change of variables'', with $\mathbf{h}$ a cavity field. The relation between DL and the renormalization group was previously observed in the context of restricted Boltzmann machine (RBM)~\cite{mehta}. Once $\mathbf{h}$ has been computed, the information passes through the ``synaptic'' gate, and transmitted with a certain probability if it exceeds the threshold $b_i$. The core task at hand is to determine the state of the gate (open/close). The absence of lateral connections in FFNs means that each synaptic gate is only influenced by its receptive signal. Given a statistical ensemble of hidden binary gates, the least unbiased distribution  can be obtained by maximizing its entropy, subject to constraints imposed by the conserved quantities, i.e. the first and second moments of the data~\cite{zecchina, mckay}. However, in the absence of lateral connections, the entropy functional of the hidden gate $s_i$ does not account for the second moment.
 %
 Functionally varying with respect to $P(\mathbf{s)}$ and solving for the Lagrange multipliers, one  obtains~\cite{roberto}:
 %
@@ -91,19 +97,19 @@ Functionally varying with respect to $P(\mathbf{s)}$ and solving for the Lagrang
 P(\mathbf{s} | \mathbf{h}) = \frac{e^{ \sum_i \beta_i  \, s_i \, h_i }}{\prod_i \, \left( 1+ e^{\beta_i \, h_i} \right)}
 \end{equation}
 %
-where $\beta_i$ encodes the noise.  In a physical system, $\beta_i$ is the inverse temperature in units of Boltzmann's constant and in equilibrium it is the same for each $s_i$; however, here the network is only in a local equilibrium as the units are not allowed to exchange ``energy'' (information) among themselves due to the lack of pairwise interactions. We have introduced $P(\mathbf{s} | \mathbf{h})$ to denote the conditional probability of $\mathbf{s}$ given the signal $\mathbf{h}$ --  and the partition function $Z$. Finally, given the distribution of the coarse grained inputs and the conditional probability of the channels $P(\mathbf{s}|\mathbf{h})$, one is left evaluating the channel transmission probability
+where $\beta_i$ encodes the noise.  In physics, $\beta_i$ is the inverse temperature in units of Boltzmann's constant and in equilibrium it is the same for each $s_i$; however, here the network is only in a local equilibrium as the units are not allowed to exchange ``energy'' (information) among themselves due to the lack of pairwise interactions. We have introduced $P(\mathbf{s} | \mathbf{h})$ to denote the conditional probability of $\mathbf{s}$ given the signal $\mathbf{h}$ --  and the partition function $Z$. Finally, given the distribution of the coarse grained inputs and the conditional probability of the channels $P(\mathbf{s}|\mathbf{h})$, one is left evaluating the channel transmission probability
 %
 \begin{equation} \label{eq:ps3}
 P(\mathbf{s}) = \int d \mathbf{h} \, P(\mathbf{s} | \mathbf{h}) \, P(\mathbf{h}) =  \frac{e^{-\sum_i \, \beta_i \mathscr{H}_i[s, x^{\mu}]}}{m^{-1}\prod_{\mu,i} Z_{i, \mu}}
 \end{equation}
 %
-where $\hat{h}^{\mu}_i = \sum_{j} w^{[1]}_{ij} \, x^{\mu}_j + b_i $, \,  $Z_{i, \mu}= 1+ e^{\beta_i \, h^{\mu}_i}$ is the partition function per example/index and we have identified the coarse grained Hamiltonian $\mathscr{H}_i = -  \, \sum_{j=1}^n \, s_i \, w^{[1]}_{ij} x^{\mu}_j -  \, s_i \, b_i$. Eq.~\eqref{eq:ps3} is the starting point of an {\it energy based model}, where it is the coarse grained probability $P(\mathbf{s})$ that propagates through the network (see e.g.~\cite{connie} ) as opposed to signals in a FFN; indeed, $\mathscr{H}$ has the form of a RBM with binary hidden units. The expected value of the channel transmission, $\langle s_i \rangle$ is~\cite{hertz} the logistic function, for each empirical realization $\mu$ and unit $i$:
+where $\hat{h}^{\mu}_i = \sum_{j} w^{[1]}_{ij} \, x^{\mu}_j + b_i $, \,  $Z_{i, \mu}= 1+ e^{\beta_i \, h^{\mu}_i}$ is the partition function per example/index and we have identified the coarse grained Hamiltonian $\mathscr{H}_i = -  \, \sum_{j=1}^n \, s_i \, w^{[1]}_{ij} x^{\mu}_j -  \, s_i \, b_i$. Eq.~\eqref{eq:ps3} is the starting point of an {\it energy based model}, where it is the coarse grained probability $P(\mathbf{s})$ that propagates through the network (see e.g.~\cite{connie} ) as opposed to signals in a FFN; $\mathscr{H}$ has the form of a RBM with binary hidden units. The expected value of the channel transmission, $\langle s_i \rangle$ is~\cite{hertz} the logistic function, for each empirical realization $\mu$ and unit $i$:
 %
 \begin{equation} \label{eq:ps4}
 \langle s_i \rangle = {\beta_i}^{-1} \partial_{b_i} \log Z_{i, \mu} =  \sigma(\beta_i \, \hat{h}^{\mu}_i).
 \end{equation}
 %
-This is the known mean-field solution of the Ising model; here this is exact due to the lack of lateral connections. We stress that this is not the coarse grained input signal {\it transmitted} by the channel; it solely determines the expectation of channel transmissions {\it given} the coarsed grained input $h_i^{\mu}$. To ensure dimensional consistency across hidden layers, the output signal of each unit must have the same dimension as its input. Therefore, the correct quantity to consider is the {\it expectation value} of the output $j_i = h_i \, s_i $.  This can be  obtained by summing over all gate states, or by using the partition function of Eq.~\eqref{eq:ps3}
+This is the known mean-field solution of the Ising model; here it is exact due to the lack of lateral connections. We stress that this is not the coarse grained input signal {\it transmitted} by the channel; it solely determines the expectation of channel transmissions {\it given} $h_i^{\mu}$. To ensure dimensional consistency across hidden layers, the output of each unit must have the same dimension as its input. Therefore, the correct quantity to consider is the {\it expectation value} of the output $j_i = h_i \, s_i $.  This can be  obtained by summing over all gate states, or by using the partition function of Eq.~\eqref{eq:ps3}
 %
 \begin{equation} \label{eq:ps5}
 \langle j_i \rangle = \langle \hat{h}_i^{\mu} \, s_i \rangle_s = \partial_{\beta_i} \log{Z_{i,\mu}} = \hat{h}^{\mu}_i \, \sigma(\beta_i \, \hat{h}^{\mu}_i),
@@ -135,7 +141,7 @@ Consider now the same limiting behavior for {\it Swish}. If $\hat{h}_i \gg 1/\be
 A thorough benchmark of {\it Swish} versus other activations was presented in ~\cite{prajit}, where it was shown that {\it Swish} outperformed all other choices on image classification tasks. Hereafter,  we consider both artificial and experimental datasets. Given that both datasets lead to the same qualitative features, here we discuss the former and come back to the latter in~\eqref{a:numerical}. We considered two binary classification tasks: a linear and a non-linear one, each trained with one and two hidden layers. For the linear task with a single, 10 units layer, all three activations attain full train/test accuracy but {\it Swish} is the fastest converging.  For the non-linear task, {\it ReLu} quickly converges to a suboptimal plateau. To obtain a better understanding, we have evaluated two different indices: the fraction of negative eigenvalues of the Hessian --$\alpha$-- and the fraction of zero eigenvalues -- $\gamma$ --. The former measures the ratio of descent to ascent directions on the energy landscape; when $\alpha$ is large, gradient descent can quickly escape a critical point due to the existence of multiple unstable directions. However, when a critical point exhibits multiple near-zero eigenvalues, roughly captured by $\gamma$, gradient descent will slowly decrease the training loss.
 In general, we find that for {\it ReLu} networks $\gamma \neq 0$ across all the training phase, while this is typically not the case for both {\it Swish} and {\it Sigmoid}-networks. Taking the two layer case as a representative example, we show that {\it ReLu} networks are sensitive to fine tuning of the model: choosing a $10-2$ or a $8-5$ configuration over the $8-2$ considered here, greatly improves learning. In stark contrast, {\it Swish} networks exhibit consistent performance over a wider choice of architecture/learning parameters. Although the performance impact might be fairly small for small networks, it certainly plays an important role for larger ones, as discussed in~\cite{prajit}. Looking at the fraction of residuals $e^{\mu} \simeq (\hat{y}^{\mu} - y^{\mu})/m$ closer to zero we found, surprisingly, that {\it Swish} greatly outperforms the other activations in minimizing the empirical error, see~\eqref{a:numerical}.
 %
-In addition, we find that the eigenvalue distribution obtained with {\it ReLu}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in ~\cite{penn1, levent}. In contrast, {\it Swish} shows a significantly wider spread in the eigenvalue distribution at the end of training, see sec.~\eqref{a:numerical}.
+In addition, we find that the eigenvalue distribution obtained with {\it ReLu}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in ~\cite{penn1, levent}. On the other hand, {\it Swish} shows a significantly wider spread in the eigenvalue distribution during training, with larger $\alpha$ index facilitating downhill descent. At the end of training, the fraction of negative eigenvalues is negligible, comparing to those from {\it ReLu} and {\it Sigmoid}, indicating that a local minima is reached, see sec.~\eqref{a:numerical}.
 
 
 \section{Conclusion and perspectives}
@@ -259,7 +265,7 @@ Previously, we noticed that from a statistical mechanics point of view we are ev
 \end{subfigure}
 %
 \begin{subfigure}[]{}
-\includegraphics[width= 0.5\textwidth]{eigens_MNIST.png}
+\includegraphics[width= 0.5\textwidth]{eigens_MNIST.pdf}
 \end{subfigure}
 %
 \caption{ \label{fig:mnist} Single hidden layer network (25 units) trained on the MNIST dataset. (top left) Loss functions, (top right) $\alpha$ index, (bottom left) Fraction of zero eigenvalues $\gamma$ and (bottom right) fraction of zero residuals. (b) eigenvalue distribution at the end of training}
