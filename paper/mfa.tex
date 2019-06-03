@@ -144,10 +144,53 @@ Consider now the same limiting behavior for {\it Swish}. If $\hat{h}_i \gg 1/\be
  %
 \section{Numerical Analysis}\label{sec:numerical}
 %
+\begin{figure*}[t!]
+\centering
+	\begin{subfigure}[]{ }
+	\includegraphics[width = 0.48\textwidth]{costs.pdf}
+	\label{fig:cost1}
+  \end{subfigure}
+ 	%~
+	\begin{subfigure}[]{}
+ 		\includegraphics[width = 0.48\textwidth]{alpha.pdf}
+		\label{fig:index1}
+	\end{subfigure}
+  ~
+  \begin{subfigure}[]{}
+	\includegraphics[width= 0.48\textwidth]{residues.pdf}
+	\label{fig:res}
+	\end{subfigure}
+  %
+  \begin{subfigure}[]{}
+	\includegraphics[width= 0.48\textwidth]{gamma.pdf}
+	\label{fig:gamma}
+	\end{subfigure}
+
+	\caption{ \label{fig:index} (a) Loss functions for linear (left) and non-linear (right) binary classification. (Top) 10 units hidden layer (Bottom) two hidden layer of 8 and 2 units respectively. All cases have a {\it Sigmoid} activation in the last layer and a learning rate of 0.01. (b) $\alpha$ index  v.s. energy for the single layer network with linear (left) and non-linear (right) decision boundary. (c)  Fraction of zero residuals as a function of training epochs for the single 8-2 layer network with linear (top/bottom left) and non-linear (top/bottom right) decision boundary. (d) Fraction of zero eigenvalues. (Top left/right) linear/non-linear dataset with a single, 10 units hidden layer. (Bottom left/right)  linear/non-linear dataset with two hidden layers of 8 and 2 units respectively. Curves are evaluated with the same number of epochs within a single batch training. }
+\end{figure*}
+%
 A thorough benchmark of {\it Swish} versus other activations was presented in ~\cite{prajit}, where it was shown that {\it Swish} outperformed all other choices on image classification tasks. Hereafter,  we consider both artificial and experimental datasets. Given that both datasets lead to the same qualitative features, here we discuss the former and come back to the latter in~\eqref{a:numerical}. We considered two binary classification tasks: a linear and a non-linear one, each trained with one and two hidden layers. For the linear task with a single, 10 units layer, all three activations attain full train/test accuracy but {\it Swish} is the fastest converging.  For the non-linear task, {\it ReLu} quickly converges to a suboptimal plateau. To obtain a better understanding, we have evaluated two different indices: the fraction of negative eigenvalues of the Hessian --$\alpha$-- and the fraction of zero eigenvalues -- $\gamma$ --. The former measures the ratio of descent to ascent directions on the energy landscape; when $\alpha$ is large, gradient descent can quickly escape a critical point due to the existence of multiple unstable directions. However, when a critical point exhibits multiple near-zero eigenvalues, roughly captured by $\gamma$, gradient descent will slowly decrease the training loss.
 In general, we find that for {\it ReLu} networks $\gamma \neq 0$ across all the training phase, while this is typically not the case for both {\it Swish} and {\it Sigmoid}-networks. Taking the two layer case as a representative example, we show that {\it ReLu} networks are sensitive to fine tuning of the model: choosing a $10-2$ or a $8-5$ configuration over the $8-2$ considered here, greatly improves learning. In stark contrast, {\it Swish} networks exhibit consistent performance over a wider choice of architecture/learning parameters. Although the performance impact might be fairly small for small networks, it certainly plays an important role for larger ones, as discussed in~\cite{prajit}. Looking at the fraction of residuals $e^{\mu} \simeq (\hat{y}^{\mu} - y^{\mu})/m$ closer to zero we found, surprisingly, that {\it Swish} greatly outperforms the other activations in minimizing the empirical error, see~\eqref{a:numerical}.
 %
-In addition, we find that the eigenvalue distribution obtained with {\it ReLu}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in ~\cite{penn1, levent}. On the other hand, {\it Swish} shows a significantly wider spread in the eigenvalue distribution during training, with larger $\alpha$ index facilitating downhill descent. At the end of training, the fraction of negative eigenvalues is negligible, comparing to those from {\it ReLu} and {\it Sigmoid}, indicating that a local minima is reached, see sec.~\eqref{a:numerical}.
+In addition, we find that the eigenvalue distribution obtained with {\it ReLu}  {\it shrinks} with increasing training epochs, giving rise to the singular distribution reported in ~\cite{penn1, levent}. On the other hand, {\it Swish} shows a significantly wider spread in the eigenvalue distribution during training, with larger $\alpha$ index facilitating downhill descent. At the end of training, the fraction of negative eigenvalues is negligible, comparing to those from {\it ReLu} and {\it Sigmoid}, indicating that a local minima is reached, see sec.~\eqref{a:numerical}. The results of figure~\eqref{fig:index} have been obtained using Adam for batch training in order to distinguish the effect of noise introduced by {\it Swish} from the one due to random minibatches. Also notice that the two dataset are fairly small: the linearly separable one contains $51$ examples while the non-linear one has $863$ examples.
+
+To verify that the observed effects are not specific to small datasets, we have performed the same analysis on the MNIST dataset, comprising $1797$ examples and obtained a qualitatively similar result, see fig.\eqref{fig.mnist}.
+%
+\begin{figure*}[t!]
+\centering
+\begin{subfigure}[]{}
+\includegraphics[width= 0.48\textwidth]{mnist.pdf}
+\label{fig:mnist}
+\end{subfigure}
+%
+\begin{subfigure}[]{}
+\includegraphics[width= 0.5\textwidth]{eigens_MNIST.pdf}
+\end{subfigure}
+%
+\caption{ \label{fig:mnist} Single hidden layer network (25 units) trained on the MNIST dataset. (top left) Loss functions, (top right) $\alpha$ index, (bottom left) Fraction of zero eigenvalues $\gamma$ and (bottom right) fraction of zero residuals. (b) eigenvalue distribution at the end of training}
+\end{figure*}
+%
+Further results and analysis,  can be found in the~\href{https://github.com/WessZumino/meanfield-theory-of-activation-functions}{git repository}.
 
 
 \section{Conclusion and perspectives}
@@ -156,7 +199,7 @@ In this work, we have introduced an energy-based framework that allows systemati
 
 \section{Acknowledgements}
 
-M.M. would like to thank Ned Phillips, Bill Phillips, Sarah Chan and Roberto Raimondi for support and discussions. A special thanks to  F\'abio Hip\'olito and Aki Ranin for carefully reading and commenting the manuscript. T.C. would like to thank Shaowei Lin for useful discussions and for financial support from the SUTD-ZJU collaboration research grant ZJURP1600103. P.E.T would like to thank M. D. Costa for help with HPC. Some of the calculations were carried out at the HPC facilities of the NUS Centre for Advanced 2D materials. Finally, M.M. And T.C. would like to thank the AI Saturday meetup initiative organised by Nurture.ai, that sparked some of the ideas presented in this work.
+This work was initiated when M.M. was at Bambu. M.M. would like to thank Ned Phillips, Bill Phillips, Sarah Chan and Roberto Raimondi for support and discussions. A special thanks to  F\'abio Hip\'olito and Aki Ranin for carefully reading and commenting the manuscript. T.C. would like to thank Shaowei Lin for useful discussions and for financial support from the SUTD-ZJU collaboration research grant ZJURP1600103. P.E.T would like to thank M. D. Costa for help with HPC. Some of the calculations were carried out at the HPC facilities of the NUS Centre for Advanced 2D materials. Finally, M.M. And T.C. would like to thank the AI Saturday meetup initiative organised by Nurture.ai, that sparked some of the ideas presented in this work.
 
 \appendix
 \section{Cross Entropy Loss} \label{a:loss}
@@ -227,62 +270,9 @@ P(y) &\simeq \int d\boldsymbol{\theta} \, e^{m S[\boldsymbol{\theta}]} \\ \nonum
 S[\boldsymbol{\theta}] &= \frac{1}{m} \sum_{\mu} \left\{ y^{\mu} \, \log [ q^{\mu}( \boldsymbol{\theta} ) ] + (1-y^{\mu}) \, \log [1-q^{\mu}( \boldsymbol{\theta}) ] \right\},
 \end{align}
 %
-%
-\begin{figure*}[t!]
-\centering
-	\begin{subfigure}[]{ }
-	\includegraphics[width = 0.48\textwidth]{costs.pdf}
-	\label{fig:cost1}
-  \end{subfigure}
- 	%~
-	\begin{subfigure}[]{}
- 		\includegraphics[width = 0.48\textwidth]{alpha.pdf}
-		\label{fig:index1}
-	\end{subfigure}
-  ~
-  \begin{subfigure}[]{}
-	\includegraphics[width= 0.48\textwidth]{residues.pdf}
-	\label{fig:res}
-	\end{subfigure}
-  %
-  \begin{subfigure}[]{}
-	\includegraphics[width= 0.48\textwidth]{gamma.pdf}
-	\label{fig:gamma}
-	\end{subfigure}
-
-	\caption{ \label{fig:index} (a) Loss functions for linear (left) and non-linear (right) binary classification. (Top) 10 units hidden layer (Bottom) two hidden layer of 8 and 2 units respectively. All cases have a {\it Sigmoid} activation in the last layer and a learning rate of 0.01. (b) $\alpha$ index  v.s. energy for the single layer network with linear (left) and non-linear (right) decision boundary. (c)  Fraction of zero residuals as a function of training epochs for the single 8-2 layer network with linear (top/bottom left) and non-linear (top/bottom right) decision boundary. (d) Fraction of zero eigenvalues. (Top left/right) linear/non-linear dataset with a single, 10 units hidden layer. (Bottom left/right)  linear/non-linear dataset with two hidden layers of 8 and 2 units respectively. Curves are evaluated with the same number of epochs within a single batch training. }
-\end{figure*}
-%
 up to an additive constant depending only on $y$. The final step consists of evaluating the $\theta$ integral again for $m \gg 1$, and take the maximum likelihood value $\theta^*$. This last step is numerically performed by the gradient descent algorithm. Note however that the evaluation of the cost function in the optima negelects ``finite size'' correcions, and it becomes more and more correct as the number of examples $m$ increases. In this derivation we assumed that the two outcomes of the network are not correlated, but one can relax this assumption and obtain a new Loss function that takes into account possible correlations among the labels. The latter case corresponds to multi-label classification where, controrary to multi-class classification, labels are mutually correlated.
 
 Previously, we noticed that from a statistical mechanics point of view we are evaluating an {\it annealed} average; however, as the input variables are fixed this should rather be a {\it quenched} average. This is the case of spin glasses~\cite{parisi2, giardina}, where the quenched disorder (a fixed value of the couplings between spins) leads to frustration and therefore a highly non-convex energy landscape. Interestingly, a quenched scenario is similar to the approach proposed in~\cite{pratik}, leading to an improved optimization protocol. We leave this point as an open question for future research.
-
-\section{Numerical Analysis} \label{a:numerical}
-
-%\subsection{Index of critical points}
-%
-\begin{figure*}[t!]
-\centering
-\begin{subfigure}[]{}
-\includegraphics[width= 0.48\textwidth]{mnist.pdf}
-\label{fig:mnist}
-\end{subfigure}
-%
-\begin{subfigure}[]{}
-\includegraphics[width= 0.5\textwidth]{eigens_MNIST.pdf}
-\end{subfigure}
-%
-\caption{ \label{fig:mnist} Single hidden layer network (25 units) trained on the MNIST dataset. (top left) Loss functions, (top right) $\alpha$ index, (bottom left) Fraction of zero eigenvalues $\gamma$ and (bottom right) fraction of zero residuals. (b) eigenvalue distribution at the end of training}
-\end{figure*}
-%
-In section~\eqref{sec:numerical} we have qualitatively described the behaviour of the two indices $\alpha$ and $\gamma$ on two classification tasks, a linear and a non-linear one. Here we report the results of this analysis more in details while dataset and codes are available as a~\href{https://github.com/WessZumino/meanfield-theory-of-activation-functions}{git repository}.
-
-The results of figure~\eqref{fig:index} have been obtained using Adam for batch training in order to distinguish the effect of noise introduced by {\it Swish} from the one due to random minibatches. Also notice that the two dataset are fairly small: the linearly separable one contains $51$ examples while the non-linear one has $863$ examples.
-
-To verify that the observed effects are not specific to small datasets, we have performed the same analysis on the MNIST dataset, comprising $1797$ examples and obtained a qualitatively similar result.
-Further results and analysis, together with a visualization of the time evolution of eigenvalue distribution during training, can be found in the~\href{https://github.com/WessZumino/meanfield-theory-of-activation-functions}{git repository}.
-
-%In the next section, we complete this numerical study with an analysis of the Hessian eigenvectors.
 %
 %\subsection{Hessian eigenvectors} \label{a:eigenvect}
 %
